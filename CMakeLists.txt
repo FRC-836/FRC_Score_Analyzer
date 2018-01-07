@@ -6,6 +6,7 @@ project(FRC_2018_Point_Analyzer)
 #setup qt
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
 
 #fine QtWidgets library
 find_package(Qt5Widgets REQUIRED)
@@ -23,10 +24,10 @@ set(src src/main.cpp
 set(include inc/MainWindow.h
             )
             
-set(forms form/MainWindow.ui
+set(forms inc/MainWindow.ui
           )
 #create the library
-add_library(${PROJECT_NAME} ${src} ${include} ${forms})
+add_executable(${PROJECT_NAME} ${src} ${include} ${forms})
 
 #linking
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
