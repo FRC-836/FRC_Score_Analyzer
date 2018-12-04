@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<game year="2013" matchLength="135" autoLength="15" endGameLength="30" >
+	<!-- Default max attributes to -1 (infinite) -->
+	<!-- Method Types should be enumerated to limit the categories. New ones may be added, but only if a method does not fit in existing categories -->
+	<!-- units should be qty, sec, feet, or some other discrete unit to define scoring methods by -->
+	<scoreType name="Disc" max="130" maxPerAlliance="-1" maxPerTeam="-1" type="projectile" unit="qty" />
+	<scoreType name="Colored Disc" subset="Disc" max="-1" maxPerAlliance="6" type="projectile" unit="qty" />
+	<scoreType name="Climb" max="-1" maxPerTeam="3" type="EndGameBonus" unit="level" />
+	
+	<!-- If no Autonomous value defined or set to 0, cannot be scored in Auto. If tele score is set to 0, can only be scored in auto. -->
+	<scoreMethod name="Low Goal" type="Disc" autoScore="2" teleScore="1" />
+	<scoreMethod name="Middle Goal" type="Disc" autoScore="4" teleScore="2" />
+	<scoreMethod name="High Goal" type="Disc" autoScore="6" teleScore="3" />
+	<scoreMethod name="Pyramid Goal" type="Colored Disc" teleScore="5" />
+	<scoreMethod name="Climb Level" type="Climb" endScore="10" />
+
+
+</game>
+
+
