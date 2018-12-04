@@ -23,13 +23,6 @@
 		<case value="2" scoreMethod="Scale Ownership" modifierType="scale" amount="2" maxUnits="10" />
 		<case value="3" scoreMethod="Switch Ownership, Scale Ownership" modifierType="scale" amount="2" maxUnits="10" />
 	</scoreModifier>
-
-	<scoreModifier name="Force" type="Powerup" >
-		<case value="1" scoreMethod="Switch Ownership" modifierType="possession" maxUnits="10" />
-		<case value="2" scoreMethod="Scale Ownership" modifierType="possession" maxUnits="10" />
-		<case value="3" scoreMethod="Switch Ownership, Scale Ownership" modifierType="possession" maxUnits="10" />
-	</scoreModifier>
-
 </game>
 
 
