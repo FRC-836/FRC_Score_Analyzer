@@ -14,10 +14,12 @@ find_package(Qt5Widgets REQUIRED)
 #setup source files
 set(src src/main.cpp
         src/MainWindow.cpp
+        src/CmdOptions.cpp
         )
         
 #setup header files
 set(include inc/MainWindow.h
+            inc/CmdOptions.h
             )
             
 set(forms inc/MainWindow.ui
@@ -27,7 +29,8 @@ add_executable(${PROJECT_NAME} ${src} ${include} ${forms})
 
 #setup include and linking directories
 target_include_directories(${PROJECT_NAME} PRIVATE inc
-                          )
+                           ${PROJECT_NAME} PRIVATE deps/OutputManager_Qt/inc
+                           )
 
 #linking
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
