@@ -1,6 +1,6 @@
 #include "CmdOptions.h"
 
-const QMap<CmdOptions::VERBOSITY, std::string> CmdOptions::VERBOSITY_STR_MAP = {
+const QMap<CmdOptions::VERBOSITY, QString> CmdOptions::VERBOSITY_STR_MAP = {
   {CmdOptions::VERBOSITY::NO_INFO,             "No Information"},
   {CmdOptions::VERBOSITY::ERRORS_ONLY,         "Errors Only"},
   {CmdOptions::VERBOSITY::ERRORS_AND_WARNINGS, "Errors and Warnings"},
@@ -11,7 +11,7 @@ const QMap<CmdOptions::VERBOSITY, std::string> CmdOptions::VERBOSITY_STR_MAP = {
 
 //defaults
 CmdOptions::VERBOSITY CmdOptions::verbosity = CmdOptions::VERBOSITY::USER_INFO;
-std::string CmdOptions::configFilePath = "";
+QString CmdOptions::configFilePath = "";
 
 OutputManager& operator<<(OutputManager& out, CmdOptions::VERBOSITY toPrint)
 {

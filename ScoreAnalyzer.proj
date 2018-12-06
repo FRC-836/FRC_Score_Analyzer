@@ -1,0 +1,8 @@
+:open CMakeLists.txt
+:tabe res/gameDescriptionDocument2018.xml
+:sp res/gameDescriptionDocument2013.xml
+:tabe src/main.cpp
+:tabe src/MainWindow.cpp
+:vsp inc/MainWindow.h
+:tabe src/CmdOptions.cpp
+:vsp inc/CmdOptions.h

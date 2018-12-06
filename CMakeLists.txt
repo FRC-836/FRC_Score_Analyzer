@@ -33,7 +33,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE inc
                            )
 
 #linking
-target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets
+                                      OutputManager_Qt
+                                      )
 
 #dependancies
 add_subdirectory(deps/OutputManager_Qt)
