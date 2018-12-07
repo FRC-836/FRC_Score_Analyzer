@@ -6,3 +6,5 @@
 :vsp inc/MainWindow.h
 :tabe src/CmdOptions.cpp
 :vsp inc/CmdOptions.h
+:tabe src/ConfigParser.cpp
+:vsp inc/ConfigParser.h
