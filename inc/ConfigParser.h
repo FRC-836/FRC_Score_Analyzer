@@ -106,10 +106,38 @@ namespace GameConfig
       enum Attributes
       {
         NAME,
-        TYPE
+        TYPE,
+        RESOURCE
       };
     } //end  namespace Attributes
+    static QStringList AttrStr = {
+      "name",
+      "type",
+      "resource"
+    };
   } //end  namespace ScoreModifier
+
+  namespace Case
+  {
+    namespace Attributes
+    {
+      enum Attributes
+      {
+        VALUE,
+        SCORE_METHOD,
+        MODIFIER_TYPE,
+        AMOUNT,
+        MAX_UNITS
+      };
+    } //end  namespace Attributes
+    static QStringList AttrStr = {
+      "value",
+      "scoreMethod",
+      "modifierType",
+      "amount",
+      "maxUnits"
+    };
+  } //end  namespace Case
 } //end namespace GameConfig
 
 class ConfigParser

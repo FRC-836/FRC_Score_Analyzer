@@ -15,11 +15,15 @@ find_package(Qt5Widgets REQUIRED)
 set(src src/main.cpp
         src/MainWindow.cpp
         src/CmdOptions.cpp
+        src/ConfigParser.cpp
+        src/GameConfig.cpp
         )
         
 #setup header files
 set(include inc/MainWindow.h
             inc/CmdOptions.h
+            inc/ConfigParser.h
+            inc/GameConfig.h
             )
             
 set(forms inc/MainWindow.ui
