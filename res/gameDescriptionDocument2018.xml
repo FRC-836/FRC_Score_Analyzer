@@ -18,7 +18,7 @@
 	<scoreMethod name="Parking" type="Boss" endScore="5" />
 	<scoreMethod name="Climb" type="Boss" endScore="30" />
 
-	<scoreModifier name="Boost" type="Powerup" >
+	<scoreModifier name="Boost" type="Powerup" resource="Cube">
 		<case value="1" scoreMethod="Switch Ownership" modifierType="scale" amount="2" maxUnits="10" />
 		<case value="2" scoreMethod="Scale Ownership" modifierType="scale" amount="2" maxUnits="10" />
 		<case value="3" scoreMethod="Switch Ownership, Scale Ownership" modifierType="scale" amount="2" maxUnits="10" />
