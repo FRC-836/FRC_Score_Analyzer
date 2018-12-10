@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.5.0)
 #Project name
 project(FRC_Point_Analyzer)
 
+#for use with YouCompleteMe in VIM
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 #setup qt
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)

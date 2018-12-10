@@ -64,7 +64,7 @@ namespace GameConfig
         TYPE,
         UNIT,
         SUBSET
-      } //end  enum Attributes
+      }; //end  enum Attributes
     } //end  namespace Attributes
     static QStringList AttrStr = {
       "name",
