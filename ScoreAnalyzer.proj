@@ -8,5 +8,3 @@
 :vsp inc/CmdOptions.h
 :tabe src/ConfigParser.cpp
 :vsp inc/ConfigParser.h
-:tabe src/GameConfig.cpp
-:vsp inc/GameConfig.h

@@ -1,9 +1,9 @@
 #ifndef FRC_2018_SCORE_ANALYZER_MAIN_WINDOW_H
 #define FRC_2018_SCORE_ANALYZER_MAIN_WINDOW_H
 
-#include <iostream> //for testing only
+#include <iostream>
 
-#include "ui_MainWindow.h"
+#include <QWidget>
 
 class MainWindow : public QWidget
 {

@@ -1,7 +1,13 @@
 #ifndef SCORE_ANALYZER_CONFIG_PARSER_H
 #define SCORE_ANALYZER_CONFIG_PARSER_H
 
+#include <tuple>
+
 #include <qstringlist.h>
+#include <qstring.h>
+#include <qvector.h>
+
+#include "CmdOptions.h"
 
 //xml tags and attributes helper
 namespace GameConfig
@@ -137,8 +143,66 @@ namespace GameConfig
       "amount",
       "maxUnits"
     };
+    enum class ModifierTypes
+    {
+      SCALE
+    };
   } //end  namespace Case
 } //end namespace GameConfig
+
+using Case_t = std::tuple<int,QStringList,GameConfig::Case::ModifierTypes,double,double>;
+enum class CaseTuple
+{
+  VALUE,
+  SCORE_METOHD_LIST,
+  MODIFIER_TYPE,
+  AMOUNT,
+  MAX_UNITS
+};
+using ScoreModifier_t = std::tuple<QString, QString, QString, QVector<Case_t>>;
+enum class ScoreModifierTuple
+{
+  NAME,
+  TYPE,
+  RESOURCE,
+  CASE_LIST
+};
+using ScoreMethod_t = std::tuple<QString, QString, double, double, double>;
+enum class ScoreMethodTuple
+{
+  NAME,
+  TYPE,
+  AUTO_SCORE,
+  TELE_SCORE,
+  END_SCORE
+};
+using ScoreType_t = std::tuple<QString,double,double,double,QString,QString,QString>;
+enum class ScoreTypeTuple
+{
+  NAME,
+  MAX,
+  MAX_PER_ALLIANCE,
+  MAX_PER_TEAM,
+  TYPE,
+  UNIT,
+  SUBSET
+};
+using GameConfig_t = std::tuple<QString, int, int, int, int, QString, QString,
+                                QVector<ScoreType_t>, QVector<ScoreMethod_t>, 
+                                QVector<ScoreModifier_t>>;
+enum class GameConfigTuple
+{
+  NAME,
+  YEAR,
+  MATCH_LENGTH,
+  AUTO_LENGTH,
+  END_GAME_LENGTH,
+  FILE_VERSION,
+  PROGRAM,
+  SCORE_TYPE_LIST,
+  SCORE_METHOD_LIST,
+  SCORE_MODIFIER_LIST
+};
 
 class ConfigParser
 {

@@ -8,7 +8,6 @@
 	<scoreType name="Boss" maxPerAlliance="3" maxPerTeam="1" type="EndGameBonus" unit="discrete" />
 	<scoreType name="Cube" max="60" type="placed" unit="qty" />
 	<scoreType name="Run" maxPerTeam="1" type="AutoBonus" unit="discrete" />
-	<scoreType name="Powerup" maxPerMethod="3" type="HumanPlayer" unit="Cube" />
 	
 	<!-- If no Autonomous value defined or set to 0, cannot be scored in Auto. If tele score is set to 0, can only be scored in auto. -->
 	<scoreMethod name="Auto Run" type="Run" autoScore="5" teleScore="0" />
