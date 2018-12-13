@@ -7,6 +7,8 @@ void MainWindow::makeConnections()
 
 MainWindow::MainWindow()
 {
+  //TEMP
+  ConfigParser parser(CmdOptions::configFilePath);
 }
 MainWindow::~MainWindow()
 {

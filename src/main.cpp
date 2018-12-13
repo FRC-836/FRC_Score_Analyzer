@@ -35,7 +35,6 @@ int main(int argc, char** argv)
 
 bool parseCmd(QCommandLineParser& parser)
 {
-  //TODO implementation
   parser.addHelpOption();
   parser.setApplicationDescription("Analyze the scoring in robotics games");
 

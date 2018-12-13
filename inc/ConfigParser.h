@@ -6,8 +6,11 @@
 #include <qstringlist.h>
 #include <qstring.h>
 #include <qvector.h>
+#include <QXmlStreamReader>
+#include <qfile.h>
 
 #include "CmdOptions.h"
+#include "OutputManager.h"
 
 //xml tags and attributes helper
 namespace GameConfig
@@ -207,7 +210,39 @@ enum class GameConfigTuple
 class ConfigParser
 {
   private:
+    //member variables
+    QString m_path;
+    GameConfig_t m_config;
+
+    //private functions
+    Case_t caseHandler(const QXmlStreamAttributes& attribs) const;
+    ScoreModifier_t scoreModHandler(const QXmlStreamAttributes attribs) const;
+    ScoreMethod_t scoreMethodHandler(const QXmlStreamAttributes attribs) const;
+    ScoreType_t scoreTypeHandler(const QXmlStreamAttributes attribs) const;
+    GameConfig_t gameConfigHandler(const QXmlStreamAttributes attribs) const;
+
   public:
+    //constructors
+    /**
+     * Constructor that takes in the file path where the game config file is
+     * @param configFilePath: config file to parse on construction if provided
+     */
+    ConfigParser(const QString& configFilePath = "");
+
+    //public functions
+    /**
+     * Parse the config file to generate the Game Config information
+     * #param configFilePath: path to the game config XML file to parse
+     * @return: true if the file was sucessfully parsed, false otherwise
+     */
+    bool parse(const QString& configFilePath);
+
+    //getters
+    /**
+     * Get the most recently parsed config data
+     * @return: Config data from the most recently parse game config XML file
+     */
+    GameConfig_t getConfig() const;
 };
 
 #endif

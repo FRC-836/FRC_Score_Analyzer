@@ -5,6 +5,10 @@
 
 #include <QWidget>
 
+#include "ConfigParser.h"
+#include "CmdOptions.h"
+#include "OutputManager.h"
+
 class MainWindow : public QWidget
 {
   Q_OBJECT
