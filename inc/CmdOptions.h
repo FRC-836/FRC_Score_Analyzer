@@ -15,6 +15,7 @@ class CmdOptions
       ERRORS_ONLY,
       ERRORS_AND_WARNINGS,
       USER_INFO,
+      VERBOSE_INFO,
       DEBUG_INFO,
       ALL_INFO
     };
