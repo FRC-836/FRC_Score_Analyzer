@@ -3,25 +3,107 @@
 extern OutputManager cout;
 
 //private functions
-Case_t ConfigParser::caseHandler(const QXmlStreamAttributes& attribs) const
+Case_t ConfigParser::caseHandler(QXmlStreamReader& reader) const
 {
   //TODO implement
 }
-ScoreModifier_t ConfigParser::scoreModHandler(const QXmlStreamAttributes attribs) const
+ScoreModifier_t ConfigParser::scoreModHandler(QXmlStreamReader& reader) const
 {
   //TODO implement
 }
-ScoreMethod_t ConfigParser::scoreMethodHandler(const QXmlStreamAttributes attribs) const
+ScoreMethod_t ConfigParser::scoreMethodHandler(QXmlStreamReader& reader) const
 {
   //TODO implement
 }
-ScoreType_t ConfigParser::scoreTypeHandler(const QXmlStreamAttributes attribs) const
+ScoreType_t ConfigParser::scoreTypeHandler(QXmlStreamReader& reader) const
 {
   //TODO implement
 }
-GameConfig_t ConfigParser::gameConfigHandler(const QXmlStreamAttributes attribs) const
+GameConfig_t ConfigParser::gameConfigHandler(QXmlStreamReader& reader) const
 {
-  //TODO implement
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: ConfigParser: gameConfigHandler()" << endl;
+    cout << "\tname: " << reader.name() << " (" << reader.lineNumber() << ")" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  //ensure reader hasn't already encountered an error
+  if (reader.hasError())
+  {
+    return GameConfig_t();
+  } //end  if (reader.hasError())
+
+  //ensure reder is on the correct tag
+  if (reader.name() != GameConfig::TagsStr[GameConfig::Tags::GAME])
+  {
+    reader.raiseError("Unknown tag " + reader.name() + " on line "+reader.lineNumber());
+    return GameConfig_t();
+  } //end  if (reader.name() != GameConfig::TagsStr[GameConfig::Tags::GAME])
+
+  //handle attributes
+  GameConfig_t toReturn;
+  auto attribs = reader.attributes();
+
+  //match length (required)
+  auto attrStr = GameConfig::Game::AttrStr[GameConfig::Game::Attributes::MATCH_LENGTH];
+  auto conversionOk = false;
+  if (!attribs.hasAttribute(attrStr))
+  {
+    reader.raiseError("Required attribute " + attrStr + " not found line " + reader.lineNumber());
+    return GameConfig_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  auto matchLength = attribs.value(attrStr).toInt(&conversionOk);
+  if (!conversionOk)
+  {
+    reader.raiseError("Attrib " + attrStr + " must be an int (" + reader.lineNumber());
+    return GameConfig_t();
+  } //end  if (!conversionOk)
+  std::get<(int)GameConfigTuple::MATCH_LENGTH>(toReturn) = matchLength;
+
+  //auto length (required)
+  attrStr = GameConfig::Game::AttrStr[GameConfig::Game::Attributes::AUTO_LENGTH];
+  conversionOk = false;
+  if (!attribs.hasAttribute(attrStr))
+  {
+    reader.raiseError("Required attribute " + attrStr + " not found line " + reader.lineNumber());
+    return GameConfig_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  auto autoLength = attribs.value(attrStr).toInt(&conversionOk);
+  if (!conversionOk)
+  {
+    reader.raiseError("Attrib " + attrStr + " must be an int (" + reader.lineNumber());
+    return GameConfig_t();
+  } //end  if (!conversionOk)
+  std::get<(int)GameConfigTuple::AUTO_LENGTH>(toReturn) = autoLength;
+
+  //end game length (required)
+  attrStr = GameConfig::Game::AttrStr[GameConfig::Game::Attributes::END_GAME_LENGTH];
+  conversionOk = false;
+  if (!attribs.hasAttribute(attrStr))
+  {
+    reader.raiseError("Required attribute " + attrStr + " not found line " + reader.lineNumber());
+    return GameConfig_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  auto endGameLength = attribs.value(attrStr).toInt(&conversionOk);
+  if (!conversionOk)
+  {
+    reader.raiseError("Attrib " + attrStr + " must be an int (" + reader.lineNumber());
+    return GameConfig_t();
+  } //end  if (!conversionOk)
+  std::get<(int)GameConfigTuple::END_GAME_LENGTH>(toReturn) = endGameLength;
+
+  //file version (required)
+  attrStr = GameConfig::Game::AttrStr[GameConfig::Game::Attributes::FILE_VERSION];
+  conversionOk = false;
+  if (!attribs.hasAttribute(attrStr))
+  {
+    reader.raiseError("Required attribute " + attrStr + " not found line " + reader.lineNumber());
+    return GameConfig_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  auto fileVersion = attribs.value(attrStr).toString();
+  std::get<(int)GameConfigTuple::FILE_VERSION>(toReturn) = fileVersion;
+
+  return toReturn;
 }
 
 //constructors
@@ -48,6 +130,8 @@ bool ConfigParser::parse(const QString& configFilePath)
     case CmdOptions::VERBOSITY::USER_INFO:
       cout << "INFO: ConfigParser: parsing config file: " << configFilePath << endl;
       break;
+    default:
+      break;
   } //end  switch (CmdOptions::verbosity)
 
   //check file validity
@@ -70,32 +154,27 @@ bool ConfigParser::parse(const QString& configFilePath)
 
   //read the xml file
   QXmlStreamReader reader(xmlFile);
-  while (!reader.atEnd())
+  if (reader.readNextStartElement() || reader.atEnd())
   {
-    reader.readNext();
-
-    if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+    if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
     {
-      cout << "DEBUG: ConfigParser: token type: " << reader.tokenString() << endl;
-      switch (reader.tokenType())
-      {
-        case QXmlStreamReader::TokenType::StartElement:
-        case QXmlStreamReader::TokenType::EndElement:
-          cout << "DEBUG: ConfigParser: name: " << reader.name().toString() << endl;
-          break;
-        case QXmlStreamReader::TokenType::Comment:
-          cout << "DEBUG: ConfigParser: text: " << reader.text().toString() << endl;
-          break;
-      } //end  switch (reader.tokenType())
-    } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+      cout << "ERROR: ConfigParser: unexpected end of document reached" << endl;
+    } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    return false;
+  } //end  if (reader.readNextStartElement() || reader.atEnd())
 
-    if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  m_config = gameConfigHandler(reader);
+
+  if (reader.hasError())
+  {
+    if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
     {
-      cout << endl;
-    } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
-  } //end  while (!reader.atEnd())
-
-  return false;
+      cout << "ERROR: ConfigParser: couldn't processing the config file" << endl;
+      cout << '\t' << reader.errorString() << endl;
+    } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    return false;
+  } //end  if (reader.hasError)
+  return true;
 }
 
 //getters

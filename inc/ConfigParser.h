@@ -215,11 +215,11 @@ class ConfigParser
     GameConfig_t m_config;
 
     //private functions
-    Case_t caseHandler(const QXmlStreamAttributes& attribs) const;
-    ScoreModifier_t scoreModHandler(const QXmlStreamAttributes attribs) const;
-    ScoreMethod_t scoreMethodHandler(const QXmlStreamAttributes attribs) const;
-    ScoreType_t scoreTypeHandler(const QXmlStreamAttributes attribs) const;
-    GameConfig_t gameConfigHandler(const QXmlStreamAttributes attribs) const;
+    Case_t caseHandler(QXmlStreamReader& reader) const;
+    ScoreModifier_t scoreModHandler(QXmlStreamReader& reader) const;
+    ScoreMethod_t scoreMethodHandler(QXmlStreamReader& reader) const;
+    ScoreType_t scoreTypeHandler(QXmlStreamReader& reader) const;
+    GameConfig_t gameConfigHandler(QXmlStreamReader& reader) const;
 
   public:
     //constructors
