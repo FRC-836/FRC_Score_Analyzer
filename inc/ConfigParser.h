@@ -150,6 +150,9 @@ namespace GameConfig
     {
       SCALE
     };
+    static QStringList ModTypesStr = {
+      "scale"
+    };
   } //end  namespace Case
 } //end namespace GameConfig
 
@@ -206,6 +209,13 @@ enum class GameConfigTuple
   SCORE_METHOD_LIST,
   SCORE_MODIFIER_LIST
 };
+
+//print functions
+void printGameConfig(const GameConfig_t& toPrint);
+void printScoreType(const ScoreType_t& toPrint, bool useTabs = true);
+void printScoreMethod(const ScoreMethod_t& toPrint, bool useTabs = true);
+void printScoreModifier(const ScoreModifier_t& toPrint, bool useTabs = true);
+void printCase(const Case_t& toPrint, bool useTabs = true);
 
 class ConfigParser
 {

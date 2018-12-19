@@ -19,4 +19,3 @@ OutputManager& operator<<(OutputManager& out, CmdOptions::VERBOSITY toPrint)
   out << CmdOptions::VERBOSITY_STR_MAP.value(toPrint, "Invalid");
   return out;
 }
-
