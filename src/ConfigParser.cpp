@@ -72,7 +72,7 @@ void printCase(const Case_t& toPrint, bool useTabs)
   auto modType = std::get<(int)CaseTuple::MODIFIER_TYPE>(toPrint);
 
   cout << tabs << "Case: value: " << std::get<(int)CaseTuple::VALUE>(toPrint)
-       << ", modifier type: " << GameConfig::Case::ModTypesStr[(int)modType]
+       << ", modifier type: " << GameConfig::Case::ModTypesStr[modType]
        << ", amount: " << std::get<(int)CaseTuple::AMOUNT>(toPrint)
        << ", max units: " << std::get<(int)CaseTuple::MAX_UNITS>(toPrint) << endl;
 
@@ -119,6 +119,11 @@ Case_t ConfigParser::caseHandler(QXmlStreamReader& reader) const
     return Case_t();
   } //end  if (!attribs.hasAttribute(attrStr))
   auto value = attribs.value(attrStr).toInt(&conversionOk);
+  if (!conversionOk)
+  {
+    reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+    return Case_t();
+  } //end  if (!conversionOk)
   std::get<(int)CaseTuple::VALUE>(toReturn) = value;
 
   //score method (required)
@@ -128,37 +133,56 @@ Case_t ConfigParser::caseHandler(QXmlStreamReader& reader) const
     reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
     return Case_t();
   } //end  if (!attribs.hasAttribute(attrStr))
-  auto scoreMethod = attribs.value(attrStr).toString();
-  std::get<(int)CaseTuple::>(toReturn) = resource;
+  auto scoreMethodStr = attribs.value(attrStr).toString();
+  std::get<(int)CaseTuple::SCORE_METOHD_LIST>(toReturn) = scoreMethodStr.split(", ");
 
-  //type
-  //game name
-  attrStr = GameConfig::ScoreModifier::AttrStr[GameConfig::ScoreModifier::Attributes::TYPE];
-  auto type = (attribs.hasAttribute(attrStr) ? attribs.value(attrStr).toString() : "");
-  std::get<(int)ScoreModifierTuple::TYPE>(toReturn) = type;
-
-  //parse sub tags
-  while (!(reader.readNext() == QXmlStreamReader::TokenType::EndElement && 
-          reader.name() == GameConfig::TagsStr[GameConfig::Tags::SCORE_MODIFIER]))
+  //modifier type (required)
+  attrStr = GameConfig::Case::AttrStr[GameConfig::Case::Attributes::MODIFIER_TYPE];
+  if (!attribs.hasAttribute(attrStr))
   {
-    if (reader.tokenType() == QXmlStreamReader::TokenType::StartElement)
+    reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
+    return Case_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  //auto type = ModTypesStr.keyattribs.value(attrStr).toString();
+  auto type = GameConfig::Case::ModTypesStr.key(attribs.value(attrStr).toString(), 
+                                                GameConfig::Case::ModifierTypes::INVALID);
+  if (type == GameConfig::Case::ModifierTypes::INVALID)
+  {
+    reader.raiseError("Invalid case type " + GameConfig::Case::ModTypesStr[type] +
+                      " provided on line " + QString::number(reader.lineNumber()));
+    return Case_t();
+  } //end  if (type == GameConfig::Case::ModifierTypes::INVALID)
+
+  //amount (required)
+  attrStr = GameConfig::Case::AttrStr[GameConfig::Case::Attributes::AMOUNT];
+  conversionOk = false;
+  if (!attribs.hasAttribute(attrStr))
+  {
+    reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
+    return Case_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  auto amount = attribs.value(attrStr).toInt(&conversionOk);
+  if (!conversionOk)
+  {
+    reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+    return Case_t();
+  } //end  if (!conversionOk)
+  std::get<(int)CaseTuple::AMOUNT>(toReturn) = amount;
+
+  //max units
+  attrStr = GameConfig::Case::AttrStr[GameConfig::Case::Attributes::MAX_UNITS];
+  conversionOk = false;
+  auto maxUnits = -1;
+  if (attribs.hasAttribute(attrStr))
+  {
+    maxUnits = attribs.value(attrStr).toInt(&conversionOk);
+    if (!conversionOk)
     {
-      if (reader.name() == GameConfig::TagsStr[GameConfig::Tags::CASE])
-      {
-        auto caseVal = caseHandler(reader);
-        if (reader.hasError())
-        {
-          return ScoreModifier_t();
-        } //end  if (reader.hasError())
-        std::get<(int)ScoreModifierTuple::CASE_LIST>(toReturn).push_back(caseVal);
-      } //end if (reader.name() == GameConfig::TagsStr[GameConfig::Tags::SCORE_TYPE])
-      else
-      {
-        reader.raiseError("Unexpected tag: " + reader.name() + " line " + QString::number(reader.lineNumber()));
-        return ScoreModifier_t();
-      } //end else
-    } //end  if (reader.tokenType() == QXmlStreamReader::TokenType::StartElement)
-  } //end  while ((reader.readNext() == QXmlStreamReader::TokenType::EndElement && 
+      reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+      return Case_t();
+    } //end  if (!conversionOk)
+  } //end  if (attribs.hasAttribute(attrStr))
+  std::get<(int)CaseTuple::MAX_UNITS>(toReturn) = maxUnits;
 
   return toReturn;
 }
@@ -208,7 +232,6 @@ ScoreModifier_t ConfigParser::scoreModHandler(QXmlStreamReader& reader) const
   std::get<(int)ScoreModifierTuple::RESOURCE>(toReturn) = resource;
 
   //type
-  //game name
   attrStr = GameConfig::ScoreModifier::AttrStr[GameConfig::ScoreModifier::Attributes::TYPE];
   auto type = (attribs.hasAttribute(attrStr) ? attribs.value(attrStr).toString() : "");
   std::get<(int)ScoreModifierTuple::TYPE>(toReturn) = type;
@@ -245,8 +268,104 @@ ScoreMethod_t ConfigParser::scoreMethodHandler(QXmlStreamReader& reader) const
 }
 ScoreType_t ConfigParser::scoreTypeHandler(QXmlStreamReader& reader) const
 {
-  //TODO implement
-  return ScoreType_t();
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: ConfigParser: typeHandler()" << endl;
+    cout << "\tname: " << reader.name() << " (" << QString::number(reader.lineNumber()) << ")" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  //ensure reader hasn't already encountered an error
+  if (reader.hasError())
+  {
+    return ScoreType_t();
+  } //end  if (reader.hasError())
+
+  //ensure reder is on the correct tag
+  if (reader.name() != GameConfig::TagsStr[GameConfig::Tags::SCORE_TYPE])
+  {
+    reader.raiseError("Unknown tag " + reader.name() + " on line "+QString::number(reader.lineNumber()));
+    return ScoreType_t();
+  } //end  if (reader.name() != GameConfig::TagsStr[GameConfig::Tags::GAME])
+
+  //handle attributes
+  ScoreType_t toReturn;
+  auto attribs = reader.attributes();
+
+  //name (required)
+  auto attrStr = GameConfig::ScoreType::AttrStr[GameConfig::ScoreType::Attributes::NAME];
+  auto conversionOk = false;
+  if (!attribs.hasAttribute(attrStr))
+  {
+    reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
+    return ScoreType_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  auto name = attribs.value(attrStr).toString();
+  std::get<(int)ScoreTypeTuple::NAME>(toReturn) = name;
+
+  //max (required)
+  attrStr = GameConfig::ScoreType::AttrStr[GameConfig::ScoreType::Attributes::MAX];
+  conversionOk = false;
+  if (!attribs.hasAttribute(attrStr))
+  {
+    reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
+    return ScoreType_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  auto max = attribs.value(attrStr).toInt(&conversionOk);
+  if (!conversionOk)
+  {
+    reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+    return ScoreType_t();
+  } //end  if (!conversionOk)
+  std::get<(int)ScoreTypeTuple::MAX>(toReturn) = max;
+
+  //max per alliance (required)
+  attrStr = GameConfig::ScoreType::AttrStr[GameConfig::ScoreType::Attributes::MAX_PER_ALLIANCE];
+  conversionOk = false;
+  if (!attribs.hasAttribute(attrStr))
+  {
+    reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
+    return ScoreType_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  auto maxPerAlliance = attribs.value(attrStr).toInt(&conversionOk);
+  if (!conversionOk)
+  {
+    reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+    return ScoreType_t();
+  } //end  if (!conversionOk)
+  std::get<(int)ScoreTypeTuple::MAX_PER_ALLIANCE>(toReturn) = maxPerAlliance;
+
+  //max per team (required)
+  attrStr = GameConfig::ScoreType::AttrStr[GameConfig::ScoreType::Attributes::MAX_PER_TEAM];
+  conversionOk = false;
+  if (!attribs.hasAttribute(attrStr))
+  {
+    reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
+    return ScoreType_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  auto maxPerTeam = attribs.value(attrStr).toInt(&conversionOk);
+  if (!conversionOk)
+  {
+    reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+    return ScoreType_t();
+  } //end  if (!conversionOk)
+  std::get<(int)ScoreTypeTuple::MAX_PER_TEAM>(toReturn) = maxPerTeam;
+
+  //type
+  attrStr = GameConfig::ScoreType::AttrStr[GameConfig::ScoreType::Attributes::TYPE];
+  auto type = (attribs.hasAttribute(attrStr) ? attribs.value(attrStr).toString() : "");
+  std::get<(int)ScoreTypeTuple::TYPE>(toReturn) = type;
+
+  //unit
+  attrStr = GameConfig::ScoreType::AttrStr[GameConfig::ScoreType::Attributes::UNIT];
+  auto unit = (attribs.hasAttribute(attrStr) ? attribs.value(attrStr).toString() : "");
+  std::get<(int)ScoreTypeTuple::UNIT>(toReturn) = unit;
+
+  //subset
+  attrStr = GameConfig::ScoreType::AttrStr[GameConfig::ScoreType::Attributes::SUBSET];
+  auto subset = (attribs.hasAttribute(attrStr) ? attribs.value(attrStr).toString() : "");
+  std::get<(int)ScoreTypeTuple::SUBSET>(toReturn) = subset;
+
+  return toReturn;
 }
 GameConfig_t ConfigParser::gameConfigHandler(QXmlStreamReader& reader) const
 {
@@ -371,7 +490,7 @@ GameConfig_t ConfigParser::gameConfigHandler(QXmlStreamReader& reader) const
         {
           return GameConfig_t();
         } //end  if (reader.hasError())
-        std::get<(int)GameConfigTuple::SCORE_TYPE_LIST>(toReturn).push_back(scoreType);
+        std::get<(int)GameConfigTuple::SCORE_TYPE_LIST>(toReturn).insert(std::get<(int)ScoreTypeTuple::NAME>(scoreType), scoreType);;
       } //end if (reader.name() == GameConfig::TagsStr[GameConfig::Tags::SCORE_TYPE])
       else if (reader.name() == GameConfig::TagsStr[GameConfig::Tags::SCORE_METHOD])
       {
@@ -380,7 +499,7 @@ GameConfig_t ConfigParser::gameConfigHandler(QXmlStreamReader& reader) const
         {
           return GameConfig_t();
         } //end  if (reader.hasError())
-        std::get<(int)GameConfigTuple::SCORE_METHOD_LIST>(toReturn).push_back(scoreMethod);
+        std::get<(int)GameConfigTuple::SCORE_METHOD_LIST>(toReturn).insert(std::get<(int)ScoreMethodTuple::NAME>(scoreMethod), scoreMethod);
       }//end else if(reader.name() == GameConfig::TagsStr[GameConfig::Tags::SCORE_METHOD])
       else if (reader.name() == GameConfig::TagsStr[GameConfig::Tags::SCORE_MODIFIER])
       {
@@ -389,7 +508,7 @@ GameConfig_t ConfigParser::gameConfigHandler(QXmlStreamReader& reader) const
         {
           return GameConfig_t();
         } //end  if (reader.hasError())
-        std::get<(int)GameConfigTuple::SCORE_MODIFIER_LIST>(toReturn).push_back(scoreMod);
+        std::get<(int)GameConfigTuple::SCORE_MODIFIER_LIST>(toReturn).insert(std::get<(int)ScoreModifierTuple::NAME>(scoreMod), scoreMod);
       }//end else if(reader.name()==GameConfig::TagsStr[GameConfig::Tags::SCORE_MODIFIER])
       else
       {

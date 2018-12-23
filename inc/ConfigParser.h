@@ -8,6 +8,7 @@
 #include <qvector.h>
 #include <QXmlStreamReader>
 #include <qfile.h>
+#include <qmap.h>
 
 #include "CmdOptions.h"
 #include "OutputManager.h"
@@ -148,10 +149,12 @@ namespace GameConfig
     };
     enum class ModifierTypes
     {
-      SCALE
+      SCALE,
+      INVALID
     };
-    static QStringList ModTypesStr = {
-      "scale"
+    static QMap<ModifierTypes, QString> ModTypesStr = {
+      {ModifierTypes::SCALE, "scale"},
+      {ModifierTypes::INVALID, "invalid"}
     };
   } //end  namespace Case
 } //end namespace GameConfig
@@ -194,8 +197,8 @@ enum class ScoreTypeTuple
   SUBSET
 };
 using GameConfig_t = std::tuple<QString, int, int, int, int, QString, QString,
-                                QVector<ScoreType_t>, QVector<ScoreMethod_t>, 
-                                QVector<ScoreModifier_t>>;
+                                QMap<QString, ScoreType_t>, QMap<QString, ScoreMethod_t>, 
+                                QMap<QString, ScoreModifier_t>>;
 enum class GameConfigTuple
 {
   NAME,
