@@ -302,53 +302,62 @@ ScoreType_t ConfigParser::scoreTypeHandler(QXmlStreamReader& reader) const
   auto name = attribs.value(attrStr).toString();
   std::get<(int)ScoreTypeTuple::NAME>(toReturn) = name;
 
-  //max (required)
+  //max (semi-required: only one of the 3 max attributes are required)
   attrStr = GameConfig::ScoreType::AttrStr[GameConfig::ScoreType::Attributes::MAX];
   conversionOk = false;
-  if (!attribs.hasAttribute(attrStr))
+  auto max = -1;
+  if (attribs.hasAttribute(attrStr))
   {
-    reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
-    return ScoreType_t();
-  } //end  if (!attribs.hasAttribute(attrStr))
-  auto max = attribs.value(attrStr).toInt(&conversionOk);
-  if (!conversionOk)
-  {
-    reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
-    return ScoreType_t();
-  } //end  if (!conversionOk)
+    max = attribs.value(attrStr).toInt(&conversionOk);
+    if (!conversionOk)
+    {
+      reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+      return ScoreType_t();
+    } //end  if (!conversionOk)
+  } //end  if (attribs.hasAttribute(attrStr))
   std::get<(int)ScoreTypeTuple::MAX>(toReturn) = max;
 
-  //max per alliance (required)
+  //max per alliance (semi-required: only one of the 3 max attributes are required)
   attrStr = GameConfig::ScoreType::AttrStr[GameConfig::ScoreType::Attributes::MAX_PER_ALLIANCE];
   conversionOk = false;
-  if (!attribs.hasAttribute(attrStr))
+  auto maxPerAlliance = -1;
+  if (attribs.hasAttribute(attrStr))
   {
-    reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
-    return ScoreType_t();
-  } //end  if (!attribs.hasAttribute(attrStr))
-  auto maxPerAlliance = attribs.value(attrStr).toInt(&conversionOk);
-  if (!conversionOk)
-  {
-    reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
-    return ScoreType_t();
-  } //end  if (!conversionOk)
+    maxPerAlliance = attribs.value(attrStr).toInt(&conversionOk);
+    if (!conversionOk)
+    {
+      reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+      return ScoreType_t();
+    } //end  if (!conversionOk)
+  } //end  if (attribs.hasAttribute(attrStr))
   std::get<(int)ScoreTypeTuple::MAX_PER_ALLIANCE>(toReturn) = maxPerAlliance;
 
-  //max per team (required)
+  //max per team (semi-required: only one of the 3 max attributes are required)
   attrStr = GameConfig::ScoreType::AttrStr[GameConfig::ScoreType::Attributes::MAX_PER_TEAM];
   conversionOk = false;
-  if (!attribs.hasAttribute(attrStr))
+  auto maxPerTeam = -1;
+  if (attribs.hasAttribute(attrStr))
   {
-    reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
-    return ScoreType_t();
-  } //end  if (!attribs.hasAttribute(attrStr))
-  auto maxPerTeam = attribs.value(attrStr).toInt(&conversionOk);
-  if (!conversionOk)
-  {
-    reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
-    return ScoreType_t();
-  } //end  if (!conversionOk)
+    maxPerTeam = attribs.value(attrStr).toInt(&conversionOk);
+    if (!conversionOk)
+    {
+      reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+      return ScoreType_t();
+    } //end  if (!conversionOk)
+  } //end  if (attribs.hasAttribute(attrStr))
   std::get<(int)ScoreTypeTuple::MAX_PER_TEAM>(toReturn) = maxPerTeam;
+
+  //check if at least one max attribute was provided
+  if (max == -1 && maxPerAlliance == -1 && maxPerTeam == -1)
+  {
+    auto attrStrs = GameConfig::ScoreType::AttrStr;
+    reader.raiseError("There must be at least one max attribute provided: " + 
+                      QString::number(reader.lineNumber()) + "\n" + 
+                      "valid max attributes are: " + 
+                      attrStrs[GameConfig::ScoreType::Attributes::MAX_PER_ALLIANCE]+", "+ 
+                      attrStrs[GameConfig::ScoreType::Attributes::MAX] + ", " +
+                      attrStrs[GameConfig::ScoreType::Attributes::MAX_PER_TEAM]);
+  } //end  if (max == -1 && maxPerAlliance == -1 && maxPerTeam == -1)
 
   //type
   attrStr = GameConfig::ScoreType::AttrStr[GameConfig::ScoreType::Attributes::TYPE];
