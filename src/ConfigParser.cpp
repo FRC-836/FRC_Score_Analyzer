@@ -263,8 +263,108 @@ ScoreModifier_t ConfigParser::scoreModHandler(QXmlStreamReader& reader) const
 }
 ScoreMethod_t ConfigParser::scoreMethodHandler(QXmlStreamReader& reader) const
 {
-  //TODO implement
-  return ScoreMethod_t();
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: ConfigParser: typeHandler()" << endl;
+    cout << "\tname: " << reader.name() << " (" << QString::number(reader.lineNumber()) << ")" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  //ensure reader hasn't already encountered an error
+  if (reader.hasError())
+  {
+    return ScoreMethod_t();
+  } //end  if (reader.hasError())
+
+  //ensure reder is on the correct tag
+  if (reader.name() != GameConfig::TagsStr[GameConfig::Tags::SCORE_METHOD])
+  {
+    reader.raiseError("Unknown tag " + reader.name() + " on line "+QString::number(reader.lineNumber()));
+    return ScoreMethod_t();
+  } //end  if (reader.name() != GameConfig::TagsStr[GameConfig::Tags::GAME])
+
+  //handle attributes
+  ScoreMethod_t toReturn;
+  auto attribs = reader.attributes();
+
+  //name (required)
+  auto attrStr = GameConfig::ScoreMethod::AttrStr[GameConfig::ScoreMethod::Attributes::NAME];
+  auto conversionOk = false;
+  if (!attribs.hasAttribute(attrStr))
+  {
+    reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
+    return ScoreMethod_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  auto name = attribs.value(attrStr).toString();
+  std::get<(int)ScoreMethodTuple::NAME>(toReturn) = name;
+
+  //type (required)
+  attrStr = GameConfig::ScoreMethod::AttrStr[GameConfig::ScoreMethod::Attributes::TYPE];
+  if (!attribs.hasAttribute(attrStr))
+  {
+    reader.raiseError("Required attribute " + attrStr + " not found line " + QString::number(reader.lineNumber()));
+    return ScoreMethod_t();
+  } //end  if (!attribs.hasAttribute(attrStr))
+  auto type = attribs.value(attrStr).toString();
+  std::get<(int)ScoreMethodTuple::TYPE>(toReturn) = type;
+
+  //auto score (semi-required: only one of the 3 score attributes are required)
+  attrStr = GameConfig::ScoreMethod::AttrStr[GameConfig::ScoreMethod::Attributes::AUTO_SCORE];
+  conversionOk = false;
+  auto autoScore = -1;
+  if (attribs.hasAttribute(attrStr))
+  {
+    autoScore = attribs.value(attrStr).toInt(&conversionOk);
+    if (!conversionOk)
+    {
+      reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+      return ScoreMethod_t();
+    } //end  if (!conversionOk)
+  } //end  if (attribs.hasAttribute(attrStr))
+  std::get<(int)ScoreMethodTuple::AUTO_SCORE>(toReturn) = autoScore;
+
+  //tele score (semi-required: only one of the 3 score attributes are required)
+  attrStr = GameConfig::ScoreMethod::AttrStr[GameConfig::ScoreMethod::Attributes::TELE_SCORE];
+  conversionOk = false;
+  auto teleScore = -1;
+  if (attribs.hasAttribute(attrStr))
+  {
+    teleScore = attribs.value(attrStr).toInt(&conversionOk);
+    if (!conversionOk)
+    {
+      reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+      return ScoreMethod_t();
+    } //end  if (!conversionOk)
+  } //end  if (attribs.hasAttribute(attrStr))
+  std::get<(int)ScoreMethodTuple::TELE_SCORE>(toReturn) = teleScore;
+
+  //tele score (semi-required: only one of the 3 score attributes are required)
+  attrStr = GameConfig::ScoreMethod::AttrStr[GameConfig::ScoreMethod::Attributes::END_SCORE];
+  conversionOk = false;
+  auto endScore = -1;
+  if (attribs.hasAttribute(attrStr))
+  {
+    endScore = attribs.value(attrStr).toInt(&conversionOk);
+    if (!conversionOk)
+    {
+      reader.raiseError("Attrib " + attrStr + " must be an int (" + QString::number(reader.lineNumber()));
+      return ScoreMethod_t();
+    } //end  if (!conversionOk)
+  } //end  if (attribs.hasAttribute(attrStr))
+  std::get<(int)ScoreMethodTuple::END_SCORE>(toReturn) = endScore;
+
+  //check if at least one score attribute was provided
+  if (autoScore == -1 && teleScore == -1 && endScore == -1)
+  {
+    auto attrStrs = GameConfig::ScoreMethod::AttrStr;
+    reader.raiseError("There must be at least one score attribute provided: " + 
+                      QString::number(reader.lineNumber()) + "\n" + 
+                      "valid score attributes are: " + 
+                      attrStrs[GameConfig::ScoreMethod::Attributes::AUTO_SCORE]+", "+ 
+                      attrStrs[GameConfig::ScoreMethod::Attributes::TELE_SCORE] + ", " +
+                      attrStrs[GameConfig::ScoreMethod::Attributes::END_SCORE]);
+  } //end  if (autoScore == -1 && teleScore == -1 && endScore == -1)
+
+  return toReturn;
 }
 ScoreType_t ConfigParser::scoreTypeHandler(QXmlStreamReader& reader) const
 {

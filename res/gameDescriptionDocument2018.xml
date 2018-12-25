@@ -11,7 +11,7 @@
 	
 	<!-- If no Autonomous value defined or set to 0, cannot be scored in Auto. If tele score is set to 0, can only be scored in auto. -->
 	<scoreMethod name="Auto Run" type="Run" autoScore="5" teleScore="0" />
-	<scoreMethod name="Vault" type="Cube" autoScore="0" teleScore="5" />
+	<scoreMethod name="Vault" type="Cube" teleScore="5" />
 	<scoreMethod name="Scale Ownership" type="Scale Possession" autoScore="2" teleScore="1" />
 	<scoreMethod name="Switch Ownership" type="Switch Possession" autoScore="2" teleScore="1" />
 	<scoreMethod name="Parking" type="Boss" endScore="5" />
