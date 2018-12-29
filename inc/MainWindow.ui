@@ -17,19 +17,27 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>3</number>
+      </property>
       <widget class="QWidget" name="tabAuto">
        <attribute name="title">
-        <string>Tab 1</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tabEndGame">
-       <attribute name="title">
-        <string>Page</string>
+        <string>Auto</string>
        </attribute>
       </widget>
       <widget class="QWidget" name="tabTele">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>Teleop</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabEndGame">
+       <attribute name="title">
+        <string>End Game</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tabSummary">
+       <attribute name="title">
+        <string>Summary</string>
        </attribute>
       </widget>
      </widget>
@@ -66,27 +74,6 @@
    <addaction name="mnuFile"/>
    <addaction name="mnuHelp"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionNew_Configuration">
-   <property name="text">
-    <string>New Configuration</string>
-   </property>
-  </action>
-  <action name="actionLoad_Configuration">
-   <property name="text">
-    <string>Load Configuration</string>
-   </property>
-  </action>
-  <action name="action_3">
-   <property name="text">
-    <string>Save Scenario</string>
-   </property>
-  </action>
-  <action name="actionClose_2">
-   <property name="text">
-    <string>Close</string>
-   </property>
-  </action>
   <action name="actNewGame">
    <property name="text">
     <string>New Game</string>

@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.5.0)
 #Project name
 project(FRC_Point_Analyzer)
 
+#force c++14 compatibility
+set(CMAKE_CXX_STANDARD 14)
+SET(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 #for use with YouCompleteMe in VIM
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -26,6 +30,9 @@ set(include inc/MainWindow.h
             inc/CmdOptions.h
             inc/ConfigParser.h
             )
+
+set(forms inc/MainWindow.ui
+          )
             
 #create the library
 add_executable(${PROJECT_NAME} ${src} ${include} ${forms})
