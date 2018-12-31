@@ -22,14 +22,28 @@ void MainWindow::makeConnections()
   connect(m_ui->tabWidget, &QTabWidget::currentChanged, 
           this, &MainWindow::tabChangeHandler);
 }
-bool MainWindow::loadGame()
+bool MainWindow::loadGame(const QString& gameConfigPath)
 {
   if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
   {
     cout << "DEBUG: MainWindow: loadGame()" << endl;
+    cout << "\tloading game file: " << gameConfigPath << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 
-  return false;
+  //parse the provided game config file
+  ConfigParser parser;
+  if (!parser.parse(gameConfigPath))
+  {
+    if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    {
+      cout << "ERROR: MainWindow: Couldn't process game file, ignoring request" << endl;
+    } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    return false;
+  } //end  if (!parser.parse(gameConfigPath))
+
+  //update GUI with the new game config
+  updateGui(parser.getConfig());
+  return true;
 }
 void MainWindow::newGame()
 {
@@ -38,18 +52,20 @@ void MainWindow::newGame()
     cout << "DEBUG: MainWindow: newGame()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 }
-void MainWindow::saveScenario()
+void MainWindow::saveScenario(const QString& scenarioPath)
 {
   if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
   {
     cout << "DEBUG: MainWindow: saveScenario()" << endl;
+    cout << "\tsaving scenario to " << scenarioPath << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 }
-bool MainWindow::loadScenario()
+bool MainWindow::loadScenario(const QString& scenarioPath)
 {
   if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
   {
     cout << "DEBUG: MainWindow: loadScenario()" << endl;
+    cout << "\tloading scenario file: " << scenarioPath << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 
   return false;
@@ -60,6 +76,31 @@ void MainWindow::displayAbout()
   {
     cout << "DEBUG: MainWindow: displayAbout()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+}
+void MainWindow::updateGui(const GameConfig_t& config)
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: updateGui()" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+}
+QString MainWindow::getGamePath()
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: getGamePath()" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  return "";
+}
+QString MainWindow::getScenarioPath()
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: getScenarioPath()" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  return "";
 }
 
 MainWindow::MainWindow()
@@ -73,6 +114,12 @@ MainWindow::MainWindow()
   m_ui->setupUi(this);
 
   makeConnections();
+
+  //load the game provided by config path if there was one
+  if (!CmdOptions::configFilePath.trimmed().isEmpty())
+  {
+    loadGame(CmdOptions::configFilePath);
+  } //end  if (!CmdOptions::configFilePath.trimmed().isEmpty())
 }
 MainWindow::~MainWindow()
 {
@@ -132,5 +179,6 @@ void MainWindow::tabChangeHandler(int index)
   if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
   {
     cout << "DEBUG: MainWindow: tabChangeHandler()" << endl;
+    cout << "\ttab changed to " << m_ui->tabWidget->tabText(index) << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 }

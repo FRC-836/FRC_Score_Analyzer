@@ -18,11 +18,14 @@ class MainWindow : public QMainWindow
 private:
   //private functions
   void makeConnections();
-  bool loadGame();
+  bool loadGame(const QString& gameConfigPath);
   void newGame();
-  void saveScenario();
-  bool loadScenario();
+  void saveScenario(const QString& scenarioPath);
+  bool loadScenario(const QString& scenarioPath);
   void displayAbout();
+  void updateGui(const GameConfig_t& config);
+  QString getGamePath();
+  QString getScenarioPath();
 
   //member variables
   std::unique_ptr<Ui_MainWindow> m_ui;
