@@ -18,10 +18,10 @@ class MainWindow : public QMainWindow
 private:
   //private functions
   void makeConnections();
-  bool loadGame(const QString& gameConfigPath);
+  bool loadGame();
   void newGame();
-  void saveScenario(const QString& scenarioPath);
-  bool loadScenario(const QString& scenarioPath);
+  void saveScenario();
+  bool loadScenario();
   void displayAbout();
 
   //member variables
