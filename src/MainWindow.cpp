@@ -22,7 +22,7 @@ void MainWindow::makeConnections()
   connect(m_ui->tabWidget, &QTabWidget::currentChanged, 
           this, &MainWindow::tabChangeHandler);
 }
-bool MainWindow::loadGame(const QString& gameConfigPath)
+void MainWindow::loadGame(const QString& gameConfigPath)
 {
   if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
   {
@@ -38,12 +38,11 @@ bool MainWindow::loadGame(const QString& gameConfigPath)
     {
       cout << "ERROR: MainWindow: Couldn't process game file, ignoring request" << endl;
     } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
-    return false;
+    return;
   } //end  if (!parser.parse(gameConfigPath))
 
   //update GUI with the new game config
   updateGui(parser.getConfig());
-  return true;
 }
 void MainWindow::newGame()
 {
@@ -84,23 +83,73 @@ void MainWindow::updateGui(const GameConfig_t& config)
     cout << "DEBUG: MainWindow: updateGui()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 }
-QString MainWindow::getGamePath()
+bool MainWindow::getGamePath(QString& gameFilePath, bool save)
 {
   if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
   {
     cout << "DEBUG: MainWindow: getGamePath()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 
-  return "";
+  //store the most recently opened directory for use as the start directory next time
+  static QString previousDir = QDir::homePath();
+
+  //create a QFileDialog to grab the file the user wants to open
+  QFileDialog fileDiag(this);
+  fileDiag.setWindowTitle("Open Game File");
+  if (save)
+  {
+    fileDiag.setAcceptMode(QFileDialog::AcceptMode::AcceptSave);
+  } //end  if (save)
+  else
+  {
+    fileDiag.setFileMode(QFileDialog::FileMode::ExistingFile);
+  } //end  else
+  fileDiag.setNameFilter("Game Config File (*.xml)"); //may change
+  fileDiag.setDirectory(previousDir);
+  fileDiag.exec();
+
+  if (!fileDiag.selectedFiles().isEmpty())
+  {
+    gameFilePath = fileDiag.selectedFiles().at(0);
+    previousDir = fileDiag.directory().absolutePath();
+    return true;
+  } //end  if (!fileDiag.selectedFiles().isEmpty())
+
+  return false;
 }
-QString MainWindow::getScenarioPath()
+bool MainWindow::getScenarioPath(QString& scenarioFilePath, bool save)
 {
   if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
   {
     cout << "DEBUG: MainWindow: getScenarioPath()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 
-  return "";
+  //store the most recently opened directory for use as the start directory next time
+  static QString previousDir = QDir::homePath();
+
+  //create a QFileDialog to grab the file the user wants to open
+  QFileDialog fileDiag(this);
+  fileDiag.setWindowTitle("Open Scenario File");
+  if (save)
+  {
+    fileDiag.setAcceptMode(QFileDialog::AcceptMode::AcceptSave);
+  } //end  if (save)
+  else
+  {
+    fileDiag.setFileMode(QFileDialog::FileMode::ExistingFile);
+  } //end  else
+  fileDiag.setNameFilter("Scenario File (*.json)"); //may change
+  fileDiag.setDirectory(previousDir);
+  fileDiag.exec();
+
+  if (!fileDiag.selectedFiles().isEmpty())
+  {
+    scenarioFilePath = fileDiag.selectedFiles().at(0);
+    previousDir = fileDiag.directory().absolutePath();
+    return true;
+  } //end  if (!fileDiag.selectedFiles().isEmpty())
+
+  return false;
 }
 
 MainWindow::MainWindow()
@@ -152,6 +201,18 @@ void MainWindow::actLoadGameHandler()
   {
     cout << "DEBUG: MainWindow: actLoadGameHandler()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  QString filePath;
+  if (!getGamePath(filePath))
+  {
+    if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+    {
+      cout << "DEBUG: MainWindow: loading game file canceled" << endl;
+    } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+    return;
+  } //end  if (!getGamePath(filePath))
+
+  loadGame(filePath);
 }
 void MainWindow::actSaveScenarioHandler()
 {
@@ -166,6 +227,18 @@ void MainWindow::actLoadScenarioHandler()
   {
     cout << "DEBUG: MainWindow: actLoadScenarioHandler()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  QString filePath;
+  if (!getScenarioPath(filePath))
+  {
+    if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+    {
+      cout << "DEBUG: MainWindow: loading scenario file canceled" << endl;
+    } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+    return;
+  } //end  if (!getScenarioPath(filePath))
+
+  loadScenario(filePath);
 }
 void MainWindow::actAboutHandler()
 {
@@ -173,6 +246,7 @@ void MainWindow::actAboutHandler()
   {
     cout << "DEBUG: MainWindow: actAboutHandler()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  displayAbout();
 }
 void MainWindow::tabChangeHandler(int index)
 {
@@ -181,4 +255,6 @@ void MainWindow::tabChangeHandler(int index)
     cout << "DEBUG: MainWindow: tabChangeHandler()" << endl;
     cout << "\ttab changed to " << m_ui->tabWidget->tabText(index) << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  //TODO add check to only recalculate summary page when switched to
 }

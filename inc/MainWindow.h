@@ -6,6 +6,8 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
+#include <QFileDialog>
+#include <QDir>
 
 #include "ui_MainWindow.h"
 #include "ConfigParser.h"
@@ -18,14 +20,14 @@ class MainWindow : public QMainWindow
 private:
   //private functions
   void makeConnections();
-  bool loadGame(const QString& gameConfigPath);
+  void loadGame(const QString& gameConfigPath);
   void newGame();
   void saveScenario(const QString& scenarioPath);
   bool loadScenario(const QString& scenarioPath);
   void displayAbout();
   void updateGui(const GameConfig_t& config);
-  QString getGamePath();
-  QString getScenarioPath();
+  bool getGamePath(QString& gameFilePath, bool save = false);
+  bool getScenarioPath(QString& scenarioFilePath, bool save = false);
 
   //member variables
   std::unique_ptr<Ui_MainWindow> m_ui;
