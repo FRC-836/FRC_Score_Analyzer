@@ -8,6 +8,7 @@
 #include <QCloseEvent>
 #include <QFileDialog>
 #include <QDir>
+#include <QMessageBox>
 
 #include "ui_MainWindow.h"
 #include "ConfigParser.h"

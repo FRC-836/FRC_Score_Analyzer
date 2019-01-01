@@ -50,6 +50,8 @@ void MainWindow::newGame()
   {
     cout << "DEBUG: MainWindow: newGame()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  //TODO implement
 }
 void MainWindow::saveScenario(const QString& scenarioPath)
 {
@@ -58,6 +60,8 @@ void MainWindow::saveScenario(const QString& scenarioPath)
     cout << "DEBUG: MainWindow: saveScenario()" << endl;
     cout << "\tsaving scenario to " << scenarioPath << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  //TODO implement
 }
 bool MainWindow::loadScenario(const QString& scenarioPath)
 {
@@ -67,6 +71,8 @@ bool MainWindow::loadScenario(const QString& scenarioPath)
     cout << "\tloading scenario file: " << scenarioPath << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 
+  //TODO implement
+
   return false;
 }
 void MainWindow::displayAbout()
@@ -75,6 +81,15 @@ void MainWindow::displayAbout()
   {
     cout << "DEBUG: MainWindow: displayAbout()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  auto author = QStringLiteral("Author: Matthew \"Cheeto\" Russell");
+  auto title = QStringLiteral("FRC Score Analyzer");
+  auto description = QStringLiteral("Tool used to analyze FRC game scoring");
+  auto version = QStringLiteral("Version: 0.0.1");
+  auto contactInfo = QStringLiteral("email: mprussell@robobees.org");
+
+  QMessageBox::about(this, "About FRC Score Analyzer", title + "\n" + version + "\n" +
+                     description + "\n" + author + "\n" + contactInfo);
 }
 void MainWindow::updateGui(const GameConfig_t& config)
 {
