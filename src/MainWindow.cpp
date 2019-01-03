@@ -396,9 +396,29 @@ void MainWindow::tabChangeHandler(int index)
     cout << "\ttab changed to " << m_ui->tabWidget->tabText(index) << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 
-  if (index == (int)Tabs::SUMMARY)
+  switch (index)
   {
+    case (int)Tabs::AUTO:
+      resizeTable(m_ui->tblAutoRed);
+      resizeTable(m_ui->tblAutoBlue);
+      break;
+    case (int)Tabs::END_GAME:
+      resizeTable(m_ui->tblEndRed);
+      resizeTable(m_ui->tblEndBlue);
+      break;
+    case (int)Tabs::SUMMARY:
     updateSummaryTab();
-  } //end  if (index == (int)Tabs::SUMMARY)
-
+      break;
+    case (int)Tabs::TELEOP:
+      resizeTable(m_ui->tblTeleRed);
+      resizeTable(m_ui->tblTeleBlue);
+      break;
+    default:
+      if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+      {
+        cout << "ERROR: MainWindow: Somehow switched to an unrecognized tab." << endl;
+        cout << "\tApp restart recommended" << endl;
+      } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+      break;
+  } //end  switch (index)
 }
