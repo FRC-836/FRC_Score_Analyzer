@@ -24,21 +24,77 @@
        <attribute name="title">
         <string>Auto</string>
        </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QTableWidget" name="tblAutoRed">
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+          <attribute name="horizontalHeaderVisible">
+           <bool>true</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Score Method</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Red 1</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Red 2</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Red 3</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblAutoBlue"/>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tabTele">
        <attribute name="title">
         <string>Teleop</string>
        </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QTableWidget" name="tblTeleRed"/>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblTeleBlue"/>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tabEndGame">
        <attribute name="title">
         <string>End Game</string>
        </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QTableWidget" name="tblEndRed"/>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblEndBlue"/>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tabSummary">
        <attribute name="title">
         <string>Summary</string>
        </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QTableWidget" name="tblSummary"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

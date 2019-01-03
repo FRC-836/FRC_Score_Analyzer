@@ -3,6 +3,21 @@
 extern OutputManager cout;
 
 //private functions
+void MainWindow::guiSetup()
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: guiSetup()" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  //setpu the tables for the scoring tabs
+  setupTable(m_ui->tblAutoBlue, "Red");
+  setupTable(m_ui->tblTeleBlue, "Blue");
+  setupTable(m_ui->tblEndBlue, "Blue");
+  setupTable(m_ui->tblAutoRed, "Red");
+  setupTable(m_ui->tblTeleRed, "Red");
+  setupTable(m_ui->tblEndRed, "Red");
+}
 void MainWindow::makeConnections()
 {
   if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
@@ -166,6 +181,45 @@ bool MainWindow::getScenarioPath(QString& scenarioFilePath, bool save)
 
   return false;
 }
+void MainWindow::updateSummaryTab()
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: updateSummaryTab()" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  
+  //TODO implement
+}
+void MainWindow::setupTable(QTableWidget* table, QString prefix)
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: setupTable()" << endl;
+
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  table->setColumnCount(4);
+  table->setRowCount(0);
+  table->setHorizontalHeaderLabels({"Scoring Method Name", prefix + " 1", prefix + " 2", 
+                                    prefix + " 3"});
+}
+void MainWindow::addRow(QTableWidget* table, const ScoreMethod_t& socreMethod)
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: addRow()" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+}
+void MainWindow::resizeTable(QTableWidget* table)
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: resizeTable()" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  table->setColumnWidth(0, table->width() / 4);
+  table->setColumnWidth(1, table->width() / 4);
+  table->setColumnWidth(2, table->width() / 4);
+  table->setColumnWidth(3, table->width() / 4);
+}
 
 MainWindow::MainWindow()
 {
@@ -177,6 +231,7 @@ MainWindow::MainWindow()
   m_ui = std::make_unique<Ui_MainWindow>();
   m_ui->setupUi(this);
 
+  guiSetup();
   makeConnections();
 
   //load the game provided by config path if there was one
@@ -200,6 +255,20 @@ void MainWindow::closeEvent(QCloseEvent* e)
   {
     cout << "DEBUG: MainWindow: closeEvent()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+}
+void MainWindow::resizeEvent(QResizeEvent* e)
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: resizeEvennt()" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  resizeTable(m_ui->tblAutoBlue);
+  resizeTable(m_ui->tblTeleBlue);
+  resizeTable(m_ui->tblEndBlue);
+  resizeTable(m_ui->tblAutoRed);
+  resizeTable(m_ui->tblTeleRed);
+  resizeTable(m_ui->tblEndRed);
 }
 
 //public slots
@@ -271,5 +340,9 @@ void MainWindow::tabChangeHandler(int index)
     cout << "\ttab changed to " << m_ui->tabWidget->tabText(index) << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 
-  //TODO add check to only recalculate summary page when switched to
+  if (index == (int)Tabs::SUMMARY)
+  {
+    updateSummaryTab();
+  } //end  if (index == (int)Tabs::SUMMARY)
+
 }
