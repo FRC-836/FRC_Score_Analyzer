@@ -112,6 +112,33 @@ void MainWindow::updateGui(const GameConfig_t& config)
   {
     cout << "DEBUG: MainWindow: updateGui()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  //clear the old tables
+  m_ui->tblAutoBlue->setRowCount(0);
+  m_ui->tblTeleBlue->setRowCount(0);
+  m_ui->tblEndBlue->setRowCount(0);
+  m_ui->tblAutoRed->setRowCount(0);
+  m_ui->tblTeleRed->setRowCount(0);
+  m_ui->tblEndRed->setRowCount(0);
+
+  for (auto scoreMethod : std::get<(int)GameConfigTuple::SCORE_METHOD_LIST>(config))
+  {
+    if (std::get<(int)ScoreMethodTuple::AUTO_SCORE>(scoreMethod) > 0)
+    {
+      addRow(m_ui->tblAutoRed, scoreMethod);
+      addRow(m_ui->tblAutoBlue, scoreMethod);
+    } //end  if (std::get<(int)ScoreMethodTuple::AUTO_SCORE>(scoreMethod) < 0)
+    if (std::get<(int)ScoreMethodTuple::TELE_SCORE>(scoreMethod) > 0)
+    {
+      addRow(m_ui->tblTeleRed, scoreMethod);
+      addRow(m_ui->tblTeleBlue, scoreMethod);
+    } //end  if (std::get<(int)ScoreMethodTuple::TELE_SCORE>(scoreMethod) < 0)
+    if (std::get<(int)ScoreMethodTuple::END_SCORE>(scoreMethod) > 0)
+    {
+      addRow(m_ui->tblEndRed, scoreMethod);
+      addRow(m_ui->tblEndBlue, scoreMethod);
+    } //end  if (std::get<(int)ScoreMethodTuple::END_SCORE>(scoreMethod) < 0)
+  } //end  for (auto scoreMethod : std::get<(int)GameConfigTuple::SCORE_METHOD_LIST>(config))
 }
 bool MainWindow::getGamePath(QString& gameFilePath, bool save)
 {
@@ -202,12 +229,38 @@ void MainWindow::setupTable(QTableWidget* table, QString prefix)
   table->setHorizontalHeaderLabels({"Scoring Method Name", prefix + " 1", prefix + " 2", 
                                     prefix + " 3"});
 }
-void MainWindow::addRow(QTableWidget* table, const ScoreMethod_t& socreMethod)
+void MainWindow::addRow(QTableWidget* table, const ScoreMethod_t& scoreMethod)
 {
   if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
   {
     cout << "DEBUG: MainWindow: addRow()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  const auto row = table->rowCount();
+
+  table->setRowCount(table->rowCount() + 1);
+
+  //name column
+  auto name = std::get<(int)ScoreMethodTuple::NAME>(scoreMethod);
+  table->setCellWidget(row, 0, new QLabel(name));
+
+  auto spnOne = new QSpinBox();
+  spnOne->setMinimum(0);
+  spnOne->setSingleStep(std::get<(int)ScoreMethodTuple::AUTO_SCORE>(scoreMethod));
+
+  //create the tele spinbox
+  auto spnTwo = new QSpinBox();
+  spnTwo->setMinimum(0);
+  spnTwo->setSingleStep(std::get<(int)ScoreMethodTuple::AUTO_SCORE>(scoreMethod));
+
+  //create the end game spinbox
+  auto spnThree = new QSpinBox();
+  spnThree->setMinimum(0);
+  spnThree->setSingleStep(std::get<(int)ScoreMethodTuple::AUTO_SCORE>(scoreMethod));
+
+  table->setCellWidget(row, 1, spnOne);
+  table->setCellWidget(row, 2, spnTwo);
+  table->setCellWidget(row, 3, spnThree);
 }
 void MainWindow::resizeTable(QTableWidget* table)
 {
@@ -215,10 +268,10 @@ void MainWindow::resizeTable(QTableWidget* table)
   {
     cout << "DEBUG: MainWindow: resizeTable()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
-  table->setColumnWidth(0, table->width() / 4);
-  table->setColumnWidth(1, table->width() / 4);
-  table->setColumnWidth(2, table->width() / 4);
-  table->setColumnWidth(3, table->width() / 4);
+  table->setColumnWidth(0, table->width() / 4 - 1);
+  table->setColumnWidth(1, table->width() / 4 - 1);
+  table->setColumnWidth(2, table->width() / 4 - 1);
+  table->setColumnWidth(3, table->width() / 4 - 1);
 }
 
 MainWindow::MainWindow()

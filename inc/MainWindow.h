@@ -10,6 +10,8 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QMessageBox>
+#include <QLabel>
+#include <QSpinBox>
 
 #include "ui_MainWindow.h"
 #include "ConfigParser.h"
@@ -42,7 +44,7 @@ private:
   bool getScenarioPath(QString& scenarioFilePath, bool save = false);
   void updateSummaryTab();
   void setupTable(QTableWidget* table, QString prefix);
-  void addRow(QTableWidget* table, const ScoreMethod_t& socreMethod);
+  void addRow(QTableWidget* table, const ScoreMethod_t& scoreMethod);
   void resizeTable(QTableWidget* table);
 
   //member variables
