@@ -46,6 +46,8 @@ private:
   void setupTable(QTableWidget* table, QString prefix);
   void addRow(QTableWidget* table, const QString& name, int score); //TODO use decltype
   void resizeTable(QTableWidget* table);
+  void resizeSummaryTable(); //needs its own function because it resizes differently
+  int calculateRow(QTableWidget* table, int row) const;
 
   //member variables
   std::unique_ptr<Ui_MainWindow> m_ui;

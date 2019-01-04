@@ -218,8 +218,49 @@ void MainWindow::updateSummaryTab()
   {
     cout << "DEBUG: MainWindow: updateSummaryTab()" << endl;
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
-  
-  //TODO implement
+
+  //calculate auto score
+  auto redAutoScore = 0;
+  auto blueAutoScore = 0;
+  for (int i = 0; i < m_ui->tblAutoRed->rowCount(); i++)
+  {
+    redAutoScore += calculateRow(m_ui->tblAutoRed, i);
+  } //end  for (int i = 0; i < m_ui->tblAutoRed->rowCount(); i++)
+  for (int i = 0; i < m_ui->tblAutoBlue->rowCount(); i++)
+  {
+    blueAutoScore += calculateRow(m_ui->tblAutoBlue, i);
+  } //end  for (int i = 0; i < m_ui->tblAutoBlue-<rowCount(); i++)
+
+  //calculate teleop score
+  auto redTeleScore = 0;
+  auto blueTeleScore = 0;
+  for (int i = 0; i < m_ui->tblTeleRed->rowCount(); i++)
+  {
+    redTeleScore += calculateRow(m_ui->tblTeleRed, i);
+  } //end  for (int i = 0; i < m_ui->tblTeleRed->rowCount(); i++)
+  for (int i = 0; i < m_ui->tblTeleBlue->rowCount(); i++)
+  {
+    blueTeleScore += calculateRow(m_ui->tblTeleBlue, i);
+  } //end  for (int i = 0; i < m_ui->tblTeleBlue->rowCount(); i++)
+
+  //calculate end game score
+  auto redEndScore = 0;
+  auto blueEndScore = 0;
+  for (int i = 0; i < m_ui->tblEndRed->rowCount(); i++)
+  {
+    redEndScore += calculateRow(m_ui->tblEndRed, i);
+  } //end  for (int i = 0; i < m_ui->tblEndRed->rowCount(); i++)
+  for (int i = 0; i < m_ui->tblEndBlue->rowCount(); i++)
+  {
+    blueEndScore += calculateRow(m_ui->tblEndBlue, i);
+  } //end  for (int i = 0; i < m_ui->tblEndBlue->rowCount(); i++)
+
+  m_ui->tblSummary->setCellWidget(0, 0, new QLabel(QString::number(redAutoScore)));
+  m_ui->tblSummary->setCellWidget(0, 1, new QLabel(QString::number(blueAutoScore)));
+  m_ui->tblSummary->setCellWidget(1, 0, new QLabel(QString::number(redTeleScore)));
+  m_ui->tblSummary->setCellWidget(1, 1, new QLabel(QString::number(blueTeleScore)));
+  m_ui->tblSummary->setCellWidget(2, 0, new QLabel(QString::number(redEndScore)));
+  m_ui->tblSummary->setCellWidget(2, 1, new QLabel(QString::number(blueEndScore)));
 }
 void MainWindow::setupTable(QTableWidget* table, QString prefix)
 {
@@ -276,6 +317,40 @@ void MainWindow::resizeTable(QTableWidget* table)
   table->setColumnWidth(2, table->width() / 4 - 10);
   table->setColumnWidth(3, table->width() / 4 - 10);
 }
+void MainWindow::resizeSummaryTable()
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: resizeSummaryTable()" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  m_ui->tblSummary->setColumnWidth(0, m_ui->tblSummary->width() / 2 - 5);
+  m_ui->tblSummary->setColumnWidth(1, m_ui->tblSummary->width() / 2 - 5);
+}
+int MainWindow::calculateRow(QTableWidget* table, int row) const
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: calculateRow()" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  //get the three spin boxes that contain the scores for this row
+  auto spnScoreOne = qobject_cast<QSpinBox*>(table->cellWidget(row, 0));
+  auto spnScoreTwo = qobject_cast<QSpinBox*>(table->cellWidget(row, 1));
+  auto spnScoreThree = qobject_cast<QSpinBox*>(table->cellWidget(row, 2));
+
+  //if any of the spinbox grabs failed, error out
+  if (spnScoreOne == nullptr || spnScoreTwo == nullptr || spnScoreThree == nullptr)
+  {
+    if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    {
+      cout << "ERROR: MainWindow: Couldn't grab sores from row " << row << endl;
+      cout << "\tsuggest restarting the app, score's may be wrong" << endl;
+    } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    return 0;
+  }//end if (spnScoreOne == nullptr || spnScoreTwo == nullptr || spnScoreThree == nullptr)
+
+  return spnScoreOne->value() + spnScoreTwo->value() + spnScoreThree->value();
+}
 
 MainWindow::MainWindow()
 {
@@ -325,6 +400,7 @@ void MainWindow::resizeEvent(QResizeEvent* e)
   resizeTable(m_ui->tblAutoRed);
   resizeTable(m_ui->tblTeleRed);
   resizeTable(m_ui->tblEndRed);
+  resizeSummaryTable();
 }
 
 //public slots
@@ -407,7 +483,8 @@ void MainWindow::tabChangeHandler(int index)
       resizeTable(m_ui->tblEndBlue);
       break;
     case (int)Tabs::SUMMARY:
-    updateSummaryTab();
+      updateSummaryTab();
+      resizeSummaryTable();
       break;
     case (int)Tabs::TELEOP:
       resizeTable(m_ui->tblTeleRed);

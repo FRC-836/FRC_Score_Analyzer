@@ -92,7 +92,38 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QTableWidget" name="tblSummary"/>
+         <widget class="QTableWidget" name="tblSummary">
+          <row>
+           <property name="text">
+            <string>Auto Score</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Teleop Score</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>End Game Score</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Total Score</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>New Column</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Blue Alliance</string>
+           </property>
+          </column>
+         </widget>
         </item>
        </layout>
       </widget>
