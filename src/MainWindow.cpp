@@ -255,12 +255,20 @@ void MainWindow::updateSummaryTab()
     blueEndScore += calculateRow(m_ui->tblEndBlue, i);
   } //end  for (int i = 0; i < m_ui->tblEndBlue->rowCount(); i++)
 
+  //calculate the total scores
+  auto redTotalScore = 0;
+  auto blueTotalScore = 0;
+  redTotalScore = redAutoScore + redTeleScore + redEndScore;
+  blueTotalScore = blueAutoScore + blueTeleScore + blueEndScore;
+
   m_ui->tblSummary->setCellWidget(0, 0, new QLabel(QString::number(redAutoScore)));
   m_ui->tblSummary->setCellWidget(0, 1, new QLabel(QString::number(blueAutoScore)));
   m_ui->tblSummary->setCellWidget(1, 0, new QLabel(QString::number(redTeleScore)));
   m_ui->tblSummary->setCellWidget(1, 1, new QLabel(QString::number(blueTeleScore)));
   m_ui->tblSummary->setCellWidget(2, 0, new QLabel(QString::number(redEndScore)));
   m_ui->tblSummary->setCellWidget(2, 1, new QLabel(QString::number(blueEndScore)));
+  m_ui->tblSummary->setCellWidget(3, 0, new QLabel(QString::number(redTotalScore)));
+  m_ui->tblSummary->setCellWidget(3, 1, new QLabel(QString::number(blueTotalScore)));
 }
 void MainWindow::setupTable(QTableWidget* table, QString prefix)
 {
@@ -334,20 +342,38 @@ int MainWindow::calculateRow(QTableWidget* table, int row) const
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 
   //get the three spin boxes that contain the scores for this row
-  auto spnScoreOne = qobject_cast<QSpinBox*>(table->cellWidget(row, 0));
-  auto spnScoreTwo = qobject_cast<QSpinBox*>(table->cellWidget(row, 1));
-  auto spnScoreThree = qobject_cast<QSpinBox*>(table->cellWidget(row, 2));
+  auto spnScoreOne = qobject_cast<QSpinBox*>(table->cellWidget(row, 1));
+  auto spnScoreTwo = qobject_cast<QSpinBox*>(table->cellWidget(row, 2));
+  auto spnScoreThree = qobject_cast<QSpinBox*>(table->cellWidget(row, 3));
 
   //if any of the spinbox grabs failed, error out
-  if (spnScoreOne == nullptr || spnScoreTwo == nullptr || spnScoreThree == nullptr)
+  if (spnScoreOne == nullptr) 
   {
     if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
     {
-      cout << "ERROR: MainWindow: Couldn't grab sores from row " << row << endl;
+      cout << "ERROR: MainWindow: Couldn't grab score one from row " << row << endl;
       cout << "\tsuggest restarting the app, score's may be wrong" << endl;
     } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
     return 0;
-  }//end if (spnScoreOne == nullptr || spnScoreTwo == nullptr || spnScoreThree == nullptr)
+  } //end  if (spnScoreOne == nullptr) 
+  if (spnScoreTwo == nullptr) 
+  {
+    if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    {
+      cout << "ERROR: MainWindow: Couldn't grab score two from row " << row << endl;
+      cout << "\tsuggest restarting the app, score's may be wrong" << endl;
+    } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    return 0;
+  } //end  if (spnScoreTwo == nullptr) 
+  if (spnScoreThree == nullptr) 
+  {
+    if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    {
+      cout << "ERROR: MainWindow: Couldn't grab score three from row " << row << endl;
+      cout << "\tsuggest restarting the app, score's may be wrong" << endl;
+    } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    return 0;
+  } //end  if (spnScoreThree == nullptr) 
 
   return spnScoreOne->value() + spnScoreTwo->value() + spnScoreThree->value();
 }
