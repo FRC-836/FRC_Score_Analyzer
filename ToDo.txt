@@ -1,0 +1,4 @@
+make all conversion in slots safe
+compartmentalize the scoring elements for ease of modification in years future
+make sure scale boost points are only counted if the team actually controlled the scale for dt>0 sec
+

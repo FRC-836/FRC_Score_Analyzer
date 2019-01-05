@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>667</width>
+    <height>442</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tabAuto">
+       <attribute name="title">
+        <string>Auto</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QTableWidget" name="tblAutoRed">
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+          <attribute name="horizontalHeaderVisible">
+           <bool>true</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Score Method</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Red 1</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Red 2</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Red 3</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblAutoBlue"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabTele">
+       <attribute name="title">
+        <string>Teleop</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QTableWidget" name="tblTeleRed"/>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblTeleBlue"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabEndGame">
+       <attribute name="title">
+        <string>End Game</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QTableWidget" name="tblEndRed"/>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblEndBlue"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabSummary">
+       <attribute name="title">
+        <string>Summary</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QTableWidget" name="tblSummary">
+          <row>
+           <property name="text">
+            <string>Auto Score</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Teleop Score</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>End Game Score</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Total Score</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>Red Alliance</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Blue Alliance</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>667</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="mnuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actNewGame"/>
+    <addaction name="actLoadGame"/>
+    <addaction name="separator"/>
+    <addaction name="actSaveScenario"/>
+    <addaction name="actLoadScenario"/>
+    <addaction name="separator"/>
+    <addaction name="actClose"/>
+   </widget>
+   <widget class="QMenu" name="mnuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actAbout"/>
+   </widget>
+   <addaction name="mnuFile"/>
+   <addaction name="mnuHelp"/>
+  </widget>
+  <action name="actNewGame">
+   <property name="text">
+    <string>New Game</string>
+   </property>
+  </action>
+  <action name="actLoadGame">
+   <property name="text">
+    <string>Load Game</string>
+   </property>
+  </action>
+  <action name="actSaveScenario">
+   <property name="text">
+    <string>Save Scenario</string>
+   </property>
+  </action>
+  <action name="actLoadScenario">
+   <property name="text">
+    <string>Load Scenario</string>
+   </property>
+  </action>
+  <action name="actClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
