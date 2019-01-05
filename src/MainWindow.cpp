@@ -11,7 +11,7 @@ void MainWindow::guiSetup()
   } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
 
   //setpu the tables for the scoring tabs
-  setupTable(m_ui->tblAutoBlue, "Red");
+  setupTable(m_ui->tblAutoBlue, "Blue");
   setupTable(m_ui->tblTeleBlue, "Blue");
   setupTable(m_ui->tblEndBlue, "Blue");
   setupTable(m_ui->tblAutoRed, "Red");
