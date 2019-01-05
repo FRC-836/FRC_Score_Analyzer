@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<game name="Power Up" year="2018" matchLength="135" autoLength="15" endGameLength="30" fileVersion="1.0" program="FRC" >
+	<!-- Default max attributes to -1 (infinite) -->
+	<!-- Method Types should be enumerated to limit the categories. New ones may be added, but only if a method does not fit in existing categories -->
+	<!-- units should be qty, sec, feet, or some other discrete unit to define scoring methods by -->
+	<scoreType name="Scale Possession" max="135" type="possession" unit="sec" />
+	<scoreType name="Switch Possession" maxPerAlliance="135" type="possession" unit="sec" />
+	<scoreType name="Boss" maxPerAlliance="3" maxPerTeam="1" type="EndGameBonus" unit="discrete" />
+	<scoreType name="Cube" max="60" type="placed" unit="qty" />
+	<scoreType name="Run" maxPerTeam="1" type="AutoBonus" unit="discrete" />
+	
+	<!-- If no Autonomous value defined or set to 0, cannot be scored in Auto. If tele score is set to 0, can only be scored in auto. -->
+	<scoreMethod name="Auto Run" type="Run" autoScore="5" teleScore="0" />
+	<scoreMethod name="Vault" type="Cube" teleScore="5" />
+	<scoreMethod name="Scale Ownership" type="Scale Possession" autoScore="2" teleScore="1" />
+	<scoreMethod name="Switch Ownership" type="Switch Possession" autoScore="2" teleScore="1" />
+	<scoreMethod name="Parking" type="Boss" endScore="5" />
+	<scoreMethod name="Climb" type="Boss" endScore="30" />
+
+	<scoreModifier name="Boost" type="Powerup" resource="Cube">
+		<case value="1" scoreMethod="Switch Ownership" modifierType="scale" amount="2" maxUnits="10" />
+		<case value="2" scoreMethod="Scale Ownership" modifierType="scale" amount="2" maxUnits="10" />
+		<case value="3" scoreMethod="Switch Ownership, Scale Ownership" modifierType="scale" amount="2" maxUnits="10" />
+	</scoreModifier>
+</game>
+
+

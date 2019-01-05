@@ -1,0 +1,3 @@
+[submodule "deps/OutputManager_Qt"]
+	path = deps/OutputManager_Qt
+	url = git@github.com:cheeto836/QtOutputManager.git

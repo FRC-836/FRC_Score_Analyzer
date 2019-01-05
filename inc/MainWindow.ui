@@ -1,428 +1,196 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MainWindow</class>
- <widget class="QWidget" name="MainWindow">
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>678</width>
-    <height>420</height>
+    <width>667</width>
+    <height>442</height>
    </rect>
   </property>
-  <property name="font">
-   <font>
-    <pointsize>17</pointsize>
-    <underline>true</underline>
-   </font>
-  </property>
   <property name="windowTitle">
-   <string>Score_Analyzer</string>
+   <string>MainWindow</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="6" column="0">
-    <widget class="QLabel" name="label_9">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string># CUBES In Vault:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QLabel" name="m_lblRedSwitchScore">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="4">
-    <widget class="QLabel" name="m_lblBlueSwitchScore">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QSlider" name="m_hslRedScale">
-     <property name="maximum">
-      <number>135</number>
-     </property>
-     <property name="pageStep">
-      <number>10</number>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="4">
-    <widget class="QSlider" name="m_hslBlueScale">
-     <property name="maximum">
-      <number>135</number>
-     </property>
-     <property name="pageStep">
-      <number>10</number>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="4">
-    <widget class="QLabel" name="m_lblBlueScaleScore">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="4">
-    <widget class="QSlider" name="m_hslBlueSwitch">
-     <property name="maximum">
-      <number>135</number>
-     </property>
-     <property name="pageStep">
-      <number>10</number>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="2">
-    <widget class="QLabel" name="m_lblRedScaleScore">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label_6">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>Scale Ownership (Sec):</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>Switch Ownership (Sec):</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3" colspan="2">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Blue Alliance</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignHCenter|Qt::AlignTop</set>
-     </property>
-     <property name="wordWrap">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="4">
-    <widget class="QSpinBox" name="m_spnBlueVault">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="maximum">
-      <number>9</number>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="2">
-    <widget class="QSpinBox" name="m_spnRedVault">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="maximum">
-      <number>9</number>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QSlider" name="m_hslRedSwitch">
-     <property name="maximum">
-      <number>135</number>
-     </property>
-     <property name="pageStep">
-      <number>10</number>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="2">
-    <widget class="QCheckBox" name="m_chkRedBoost">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="0">
-    <widget class="QLabel" name="label_12">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string># Auto Runs:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="2">
-    <widget class="QSpinBox" name="m_spnRedAutoRun">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="maximum">
-      <number>3</number>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="4">
-    <widget class="QSpinBox" name="m_spnBlueClimb">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="maximum">
-      <number>3</number>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="0">
-    <widget class="QLabel" name="label_11">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string># Climbs:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="2">
-    <widget class="QSpinBox" name="m_spnRedClimb">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="maximum">
-      <number>3</number>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="4">
-    <widget class="QLabel" name="m_lblBlueFinalScore">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="4">
-    <widget class="QSpinBox" name="m_spnBlueAutoRun">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="maximum">
-      <number>3</number>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="4">
-    <widget class="QCheckBox" name="m_chkBlueBoost">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="label_10">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>Boost Activated:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="2">
-    <widget class="QLabel" name="m_lblRedFinalScore">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="0">
-    <widget class="QLabel" name="label_15">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>Final Score:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1" colspan="2">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Red Alliance</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignHCenter|Qt::AlignTop</set>
-     </property>
-     <property name="wordWrap">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-  </layout>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tabAuto">
+       <attribute name="title">
+        <string>Auto</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QTableWidget" name="tblAutoRed">
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+          <attribute name="horizontalHeaderVisible">
+           <bool>true</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Score Method</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Red 1</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Red 2</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Red 3</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblAutoBlue"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabTele">
+       <attribute name="title">
+        <string>Teleop</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QTableWidget" name="tblTeleRed"/>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblTeleBlue"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabEndGame">
+       <attribute name="title">
+        <string>End Game</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QTableWidget" name="tblEndRed"/>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblEndBlue"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabSummary">
+       <attribute name="title">
+        <string>Summary</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QTableWidget" name="tblSummary">
+          <row>
+           <property name="text">
+            <string>Auto Score</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Teleop Score</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>End Game Score</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>Total Score</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>Red Alliance</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Blue Alliance</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>667</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="mnuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actNewGame"/>
+    <addaction name="actLoadGame"/>
+    <addaction name="separator"/>
+    <addaction name="actSaveScenario"/>
+    <addaction name="actLoadScenario"/>
+    <addaction name="separator"/>
+    <addaction name="actClose"/>
+   </widget>
+   <widget class="QMenu" name="mnuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actAbout"/>
+   </widget>
+   <addaction name="mnuFile"/>
+   <addaction name="mnuHelp"/>
+  </widget>
+  <action name="actNewGame">
+   <property name="text">
+    <string>New Game</string>
+   </property>
+  </action>
+  <action name="actLoadGame">
+   <property name="text">
+    <string>Load Game</string>
+   </property>
+  </action>
+  <action name="actSaveScenario">
+   <property name="text">
+    <string>Save Scenario</string>
+   </property>
+  </action>
+  <action name="actLoadScenario">
+   <property name="text">
+    <string>Load Scenario</string>
+   </property>
+  </action>
+  <action name="actClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
