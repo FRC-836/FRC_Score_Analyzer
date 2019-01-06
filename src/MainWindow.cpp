@@ -36,6 +36,7 @@ void MainWindow::makeConnections()
 
   connect(m_ui->tabWidget, &QTabWidget::currentChanged, 
           this, &MainWindow::tabChangeHandler);
+  connect(m_ui->btnReset, &QPushButton::clicked, this, &MainWindow::btnResetClickHandler);
 }
 void MainWindow::loadGame(const QString& gameConfigPath)
 {
@@ -299,16 +300,22 @@ void MainWindow::addRow(QTableWidget* table, const QString& name, int score)
   auto spnOne = new QSpinBox();
   spnOne->setMinimum(0);
   spnOne->setSingleStep(score);
+  connect(m_ui->btnReset, &QPushButton::clicked, 
+          std::bind(&QSpinBox::setValue, spnOne, 0));
 
   //create the tele spinbox
   auto spnTwo = new QSpinBox();
   spnTwo->setMinimum(0);
   spnTwo->setSingleStep(score);
+  connect(m_ui->btnReset, &QPushButton::clicked, 
+          std::bind(&QSpinBox::setValue, spnTwo, 0));
 
   //create the end game spinbox
   auto spnThree = new QSpinBox();
   spnThree->setMinimum(0);
   spnThree->setSingleStep(score);
+  connect(m_ui->btnReset, &QPushButton::clicked, 
+          std::bind(&QSpinBox::setValue, spnThree, 0));
 
   table->setCellWidget(row, 1, spnOne);
   table->setCellWidget(row, 2, spnTwo);
@@ -524,4 +531,15 @@ void MainWindow::tabChangeHandler(int index)
       } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
       break;
   } //end  switch (index)
+}
+void MainWindow::btnResetClickHandler()
+{
+  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+  {
+    cout << "DEBUG: MainWindow: btnResetClickHandler()" << endl;
+  } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
+
+  //TODO figure out how to wait for all spin boxes to reset
+
+  updateSummaryTab();
 }

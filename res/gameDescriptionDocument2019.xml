@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<game name="Destination Deep Space" year="2019" matchLength="150" autoLength="0" endGameLength="20" fileVersion="1.0" program="FRC" >
+	<!-- Default max attributes to -1 (infinite) -->
+	<!-- Method Types should be enumerated to limit the categories. New ones may be added, but only if a method does not fit in existing categories -->
+	<!-- units should be qty, sec, feet, or some other discrete unit to define scoring methods by -->
+  <scoreType name="Hatch Panel" max="64" maxPerAlliance="32" type="object" unit="qty" />
+  <scoreType name="Cargo" max="48" maxPerAlliance="24" type="object" unit="qty" />
+  <scoreType name="Sandstorm Bonus" maxPerTeam="1" type="AutoBonus" unit="discrete" />
+  <scoreType name="HAB Climb Bonus" maxPerTeam="1" type="EndGameBonus" unit="discrete" />
+	
+	<!-- If no Autonomous value defined or set to 0, cannot be scored in Auto. If tele score is set to 0, can only be scored in auto. -->
+  <scoreMethod name="Hatch Panel" type="Hatch Panel" autoScore="2" teleScore="2" endScore="2" />
+  <scoreMethod name="Cargo" type="Cargo" autoScore="3" teleScore="3" endScore="3" />
+  <scoreMethod name="Sandstorm Bonus 1" type="Sandstorm Bonus" autoScore="3" />
+	<scoreMethod name="Sandstorm Bonus 2" type="Sandstorm Bonus" autoScore="6" />
+	<scoreMethod name="HAB Climb Bonus 1" type="HAB Climb Bonus" endScore="3" />
+	<scoreMethod name="HAB Climb Bonus 2" type="HAB Climb Bonus" endScore="6" />
+  <scoreMethod name="HAB Climb Bonus 3" type="HAB Climb Bonus" endScore="12" />
+</game>
+
+
