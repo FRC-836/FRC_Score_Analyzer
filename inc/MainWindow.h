@@ -45,13 +45,14 @@ private:
   bool getScenarioPath(QString& scenarioFilePath, bool save = false);
   void updateSummaryTab();
   void setupTable(QTableWidget* table, QString prefix);
-  void addRow(QTableWidget* table, Tabs period, const ScoreMethod_t& scoreMethod); //TODO use decltype
+  void addRow(QTableWidget* table, Tabs period, const ScoreMethod_t& scoreMethod);
   void resizeTable(QTableWidget* table);
   void resizeSummaryTable(); //needs its own function because it resizes differently
-  int calculateRow(QTableWidget* table, int row) const;
+  int calculateRow(QTableWidget* table, Tabs period, int row) const;
 
   //member variables
   std::unique_ptr<Ui_MainWindow> m_ui;
+  GameConfig_t m_config;
 
 protected:
   //event handlers

@@ -58,7 +58,8 @@ void MainWindow::loadGame(const QString& gameConfigPath)
   } //end  if (!parser.parse(gameConfigPath))
 
   //update GUI with the new game config
-  updateGui(parser.getConfig());
+  m_config = parser.getConfig();
+  updateGui(m_config);
 }
 void MainWindow::newGame()
 {
@@ -223,11 +224,11 @@ void MainWindow::updateSummaryTab()
   auto blueAutoScore = 0;
   for (int i = 0; i < m_ui->tblAutoRed->rowCount(); i++)
   {
-    redAutoScore += calculateRow(m_ui->tblAutoRed, i);
+    redAutoScore += calculateRow(m_ui->tblAutoRed, Tabs::AUTO, i);
   } //end  for (int i = 0; i < m_ui->tblAutoRed->rowCount(); i++)
   for (int i = 0; i < m_ui->tblAutoBlue->rowCount(); i++)
   {
-    blueAutoScore += calculateRow(m_ui->tblAutoBlue, i);
+    blueAutoScore += calculateRow(m_ui->tblAutoBlue, Tabs::AUTO, i);
   } //end  for (int i = 0; i < m_ui->tblAutoBlue-<rowCount(); i++)
 
   //calculate teleop score
@@ -235,11 +236,11 @@ void MainWindow::updateSummaryTab()
   auto blueTeleScore = 0;
   for (int i = 0; i < m_ui->tblTeleRed->rowCount(); i++)
   {
-    redTeleScore += calculateRow(m_ui->tblTeleRed, i);
+    redTeleScore += calculateRow(m_ui->tblTeleRed, Tabs::TELEOP, i);
   } //end  for (int i = 0; i < m_ui->tblTeleRed->rowCount(); i++)
   for (int i = 0; i < m_ui->tblTeleBlue->rowCount(); i++)
   {
-    blueTeleScore += calculateRow(m_ui->tblTeleBlue, i);
+    blueTeleScore += calculateRow(m_ui->tblTeleBlue, Tabs::TELEOP, i);
   } //end  for (int i = 0; i < m_ui->tblTeleBlue->rowCount(); i++)
 
   //calculate end game score
@@ -247,11 +248,11 @@ void MainWindow::updateSummaryTab()
   auto blueEndScore = 0;
   for (int i = 0; i < m_ui->tblEndRed->rowCount(); i++)
   {
-    redEndScore += calculateRow(m_ui->tblEndRed, i);
+    redEndScore += calculateRow(m_ui->tblEndRed, Tabs::END_GAME, i);
   } //end  for (int i = 0; i < m_ui->tblEndRed->rowCount(); i++)
   for (int i = 0; i < m_ui->tblEndBlue->rowCount(); i++)
   {
-    blueEndScore += calculateRow(m_ui->tblEndBlue, i);
+    blueEndScore += calculateRow(m_ui->tblEndBlue, Tabs::END_GAME, i);
   } //end  for (int i = 0; i < m_ui->tblEndBlue->rowCount(); i++)
 
   //calculate the total scores
@@ -308,31 +309,34 @@ void MainWindow::addRow(QTableWidget* table, Tabs period, const ScoreMethod_t& s
     default:
       if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
       {
-        cout << "ERROR: MainWindow: Attemtping to add row to a non scoring table. ignoring" << endl;
+        cout << "ERROR: MainWindow: can't add row to non scoring table. ignoring" << endl;
       } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
       return;
-  }
+  } //end  switch (period)
 
   //name column
   table->setCellWidget(row, 0, new QLabel(name));
 
   auto spnOne = new QSpinBox();
   spnOne->setMinimum(0);
-  spnOne->setSingleStep(score);
+  spnOne->setObjectName(name);
+  //spnOne->setSingleStep(score);
   connect(m_ui->btnReset, &QPushButton::clicked, 
           std::bind(&QSpinBox::setValue, spnOne, 0));
 
   //create the tele spinbox
   auto spnTwo = new QSpinBox();
   spnTwo->setMinimum(0);
-  spnTwo->setSingleStep(score);
+  spnTwo->setObjectName(name);
+  //spnTwo->setSingleStep(score);
   connect(m_ui->btnReset, &QPushButton::clicked, 
           std::bind(&QSpinBox::setValue, spnTwo, 0));
 
   //create the end game spinbox
   auto spnThree = new QSpinBox();
   spnThree->setMinimum(0);
-  spnThree->setSingleStep(score);
+  spnThree->setObjectName(name);
+  //spnThree->setSingleStep(score);
   connect(m_ui->btnReset, &QPushButton::clicked, 
           std::bind(&QSpinBox::setValue, spnThree, 0));
 
@@ -360,7 +364,7 @@ void MainWindow::resizeSummaryTable()
   m_ui->tblSummary->setColumnWidth(0, m_ui->tblSummary->width() / 2 - 5);
   m_ui->tblSummary->setColumnWidth(1, m_ui->tblSummary->width() / 2 - 5);
 }
-int MainWindow::calculateRow(QTableWidget* table, int row) const
+int MainWindow::calculateRow(QTableWidget* table, Tabs period, int row) const
 {
   if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
   {
@@ -401,7 +405,46 @@ int MainWindow::calculateRow(QTableWidget* table, int row) const
     return 0;
   } //end  if (spnScoreThree == nullptr) 
 
-  return spnScoreOne->value() + spnScoreTwo->value() + spnScoreThree->value();
+  auto scoreMethodName = spnScoreOne->objectName();
+  auto scoreMethodList = std::get<(int)GameConfigTuple::SCORE_METHOD_LIST>(m_config);
+
+  //check if the scoring method being grabbed actually exists (it should, but who knows)
+  if (scoreMethodList.count(scoreMethodName) == 0)
+  {
+    if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    {
+      cout << "ERROR: MainWindow: No scoring method " << scoreMethodName << endl;
+      for (auto scoreMethod : scoreMethodList)
+      {
+        cout << "\tvalid options : " << std::get<(int)ScoreMethodTuple::NAME>(scoreMethod) 
+             << ", " << endl;
+      } //end  for (auto scoreMethod : scoreMethodList)
+    } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+    return 0;
+  } //end  if (scoreMethodList.count(scoreMethodName) == 0)
+  auto scoreMethod = scoreMethodList.value(scoreMethodName);
+  auto scoreMult = 0;
+  switch (period)
+  {
+    case Tabs::AUTO:
+      scoreMult = std::get<(int)ScoreMethodTuple::AUTO_SCORE>(scoreMethod);
+      break;
+    case Tabs::TELEOP:
+      scoreMult = std::get<(int)ScoreMethodTuple::TELE_SCORE>(scoreMethod);
+      break;
+    case Tabs::END_GAME:
+      scoreMult = std::get<(int)ScoreMethodTuple::END_SCORE>(scoreMethod);
+      break;
+    default:
+      if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+      {
+        cout << "ERROR: MainWindow: Can't get score mult for non-scoring period" << endl;
+      } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_AND_WARNINGS)
+      return 0;
+  } //end  switch (period)
+
+  return spnScoreOne->value() * scoreMult + spnScoreTwo->value() * scoreMult + 
+         spnScoreThree->value() * scoreMult;
 }
 
 MainWindow::MainWindow()
