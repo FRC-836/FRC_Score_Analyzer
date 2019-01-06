@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include <functional>
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -75,6 +76,7 @@ public slots:
   void actLoadScenarioHandler();
   void actAboutHandler();
   void tabChangeHandler(int index);
+  void btnResetClickHandler();
 };
 
 #endif
