@@ -124,24 +124,22 @@ void MainWindow::updateGui(const GameConfig_t& config)
 
   for (auto scoreMethod : std::get<(int)GameConfigTuple::SCORE_METHOD_LIST>(config))
   {
-    auto name = std::get<(int)ScoreMethodTuple::NAME>(scoreMethod);
     if (std::get<(int)ScoreMethodTuple::AUTO_SCORE>(scoreMethod) > 0)
     {
-      auto score = std::get<(int)ScoreMethodTuple::AUTO_SCORE>(scoreMethod);
-      addRow(m_ui->tblAutoRed, name, score);
-      addRow(m_ui->tblAutoBlue, name, score);
+      addRow(m_ui->tblAutoRed, Tabs::AUTO, scoreMethod);
+      addRow(m_ui->tblAutoBlue, Tabs::AUTO, scoreMethod);
     } //end  if (std::get<(int)ScoreMethodTuple::AUTO_SCORE>(scoreMethod) < 0)
     if (std::get<(int)ScoreMethodTuple::TELE_SCORE>(scoreMethod) > 0)
     {
       auto score = std::get<(int)ScoreMethodTuple::TELE_SCORE>(scoreMethod);
-      addRow(m_ui->tblTeleRed, name, score);
-      addRow(m_ui->tblTeleBlue, name, score);
+      addRow(m_ui->tblTeleRed, Tabs::TELEOP, scoreMethod);
+      addRow(m_ui->tblTeleBlue, Tabs::TELEOP, scoreMethod);
     } //end  if (std::get<(int)ScoreMethodTuple::TELE_SCORE>(scoreMethod) < 0)
     if (std::get<(int)ScoreMethodTuple::END_SCORE>(scoreMethod) > 0)
     {
       auto score = std::get<(int)ScoreMethodTuple::END_SCORE>(scoreMethod);
-      addRow(m_ui->tblEndRed, name, score);
-      addRow(m_ui->tblEndBlue, name, score);
+      addRow(m_ui->tblEndRed, Tabs::END_GAME, scoreMethod);
+      addRow(m_ui->tblEndBlue, Tabs::END_GAME, scoreMethod);
     } //end  if (std::get<(int)ScoreMethodTuple::END_SCORE>(scoreMethod) < 0)
   } //end  for (auto scoreMethod : std::get<(int)GameConfigTuple::SCORE_METHOD_LIST>(config))
 }
@@ -283,7 +281,7 @@ void MainWindow::setupTable(QTableWidget* table, QString prefix)
   table->setHorizontalHeaderLabels({"Scoring Method Name", prefix + " 1", prefix + " 2", 
                                     prefix + " 3"});
 }
-void MainWindow::addRow(QTableWidget* table, const QString& name, int score)
+void MainWindow::addRow(QTableWidget* table, Tabs period, const ScoreMethod_t& scoreMethod)
 {
   if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::DEBUG_INFO)
   {
@@ -293,6 +291,27 @@ void MainWindow::addRow(QTableWidget* table, const QString& name, int score)
   const auto row = table->rowCount();
 
   table->setRowCount(table->rowCount() + 1);
+
+  auto name = std::get<(int)ScoreMethodTuple::NAME>(scoreMethod);
+  auto score = 0;
+  switch (period)
+  {
+    case Tabs::AUTO:
+      score = std::get<(int)ScoreMethodTuple::AUTO_SCORE>(scoreMethod);
+      break;
+    case Tabs::TELEOP:
+      score = std::get<(int)ScoreMethodTuple::TELE_SCORE>(scoreMethod);
+      break;
+    case Tabs::END_GAME:
+      score = std::get<(int)ScoreMethodTuple::END_SCORE>(scoreMethod);
+      break;
+    default:
+      if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+      {
+        cout << "ERROR: MainWindow: Attemtping to add row to a non scoring table. ignoring" << endl;
+      } //end  if (CmdOptions::verbosity >= CmdOptions::VERBOSITY::ERRORS_ONLY)
+      return;
+  }
 
   //name column
   table->setCellWidget(row, 0, new QLabel(name));

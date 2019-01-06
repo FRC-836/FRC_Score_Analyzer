@@ -45,7 +45,7 @@ private:
   bool getScenarioPath(QString& scenarioFilePath, bool save = false);
   void updateSummaryTab();
   void setupTable(QTableWidget* table, QString prefix);
-  void addRow(QTableWidget* table, const QString& name, int score); //TODO use decltype
+  void addRow(QTableWidget* table, Tabs period, const ScoreMethod_t& scoreMethod); //TODO use decltype
   void resizeTable(QTableWidget* table);
   void resizeSummaryTable(); //needs its own function because it resizes differently
   int calculateRow(QTableWidget* table, int row) const;
